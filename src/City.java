@@ -84,6 +84,10 @@ public class City {
 
     }
 
+    public String getName() {
+        return name;
+    }
+
     public int getX() {
         return x;
     }

@@ -14,7 +14,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private final int B_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width/2;
     private final int B_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-    private LinkedList<City> pakistan;
+    private LinkedList<Node> pakistan;
     private City fromCity;
     private City toCity;
 
@@ -27,44 +27,67 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      */
     private void InitializeAssets() {
 
-        pakistan = new LinkedList<>();
+        Graph pak = new Graph();
 
         try{
 
             File file = new File("./src/data.csv");
-            Scanner input = new Scanner(file);
+            Scanner input1 = new Scanner(file);
 
-            while(input.hasNextLine()){
+            input1.nextLine();
 
-                String line = input.nextLine();
+            Node[] nodes = new Node[69];
+
+            for (int i = 0; i < 69; i++) {
+                String line = input1.nextLine();
                 String[] data = line.split(",");
 
                 City city = (new City(data[0], Float.parseFloat(data[1]), Float.parseFloat(data[2])));
 
-                pakistan.add(city);
+                Node node = new Node(city);
+                nodes[i] = node;
+            }
+
+            input1.close();
+
+            Scanner input2 = new Scanner(file);
+
+            input2.nextLine();
+
+            // for each city
+            for (int i = 0; i < 69; i++) {
+
+                Node node = nodes[i];
+                String line = input2.nextLine();
+                String[] data = line.split(",");
+
+                for (int j = 3; j < data.length; j++) {
+
+                    for (int k = 0; k < 69; k++) {
+
+                        if (nodes[k].getCity().getName().equals(data[j].trim())) {
+                            node.addAdjacentNode(nodes[k], getDistance(node.getCity(), nodes[k].getCity()));
+                            break;
+                        }
+
+                    }
+
+                }
+
+                pak.addNode(node);
 
             }
+
+            Dijkstra.calculateShortestPath(pak.getNodes().get(5));
+            Dijkstra.printPaths(pak.getNodes(), pak.getNodes().get(13));
+
+            input2.close();
 
         } catch (Exception e){
             System.out.println("File not found!");
         }
 
-        for (City c1 : pakistan) {
-
-            for (City c2 : pakistan) {
-
-                if (!c1.equals(c2)) {
-
-                    if (getDistance(c1, c2) < 150)
-                        System.out.println(c1 + " is a neighbour of " + c2);
-
-                }
-
-            }
-
-        }
-
-        System.out.println("size: " + pakistan.size());
+        pakistan = pak.getNodes();
 
     }
 
@@ -159,10 +182,14 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
+    /**
+     * draws all the cities
+     * @param g is the graphics
+     */
     private void drawCities(Graphics g) {
 
-        for (City c : pakistan) {
-            c.draw(g);
+        for (Node v : pakistan) {
+            v.getCity().draw(g);
         }
 
     }
@@ -220,8 +247,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         // resetting if none of the cities has been selected
         if (fromCity != null && toCity != null){
-            for (City city : pakistan) {
-                city.setPressed(false);
+            for (Node v : pakistan) {
+                v.getCity().setPressed(false);
             }
             fromCity = null;
             toCity = null;
@@ -229,17 +256,18 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         // setting the source city as the one pressed (if any)
         if (fromCity == null){
-            for (City city : pakistan) {
-                city.isClicked(x, y);
-                if (city.isPressed()) {
-                    fromCity = city;
+            for (Node v : pakistan) {
+                v.getCity().isClicked(x, y);
+                if (v.getCity().isPressed()) {
+                    fromCity = v.getCity();
                     break;
                 }
             }
 
         } else {
             // setting the destination
-            for (City city : pakistan) {
+            for (Node v : pakistan) {
+                City city = v.getCity();
                 city.isClicked(x, y);
                 if (city.isPressed() && !city.equals(fromCity)) {
                     toCity = city;
@@ -286,8 +314,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         // displays the name of the city when hovered
 
-        for (City c : pakistan) {
-            c.isHovered(e.getX(), e.getY());
+        for (Node v : pakistan) {
+            v.getCity().isHovered(e.getX(), e.getY());
         }
 
 	}
