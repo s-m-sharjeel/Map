@@ -78,9 +78,6 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
             }
 
-            Dijkstra.calculateShortestPath(pak.getNodes().get(5));
-            Dijkstra.printPaths(pak.getNodes(), pak.getNodes().get(13));
-
             input2.close();
 
         } catch (Exception e){
@@ -117,6 +114,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         drawCities(g);
         drawLine(g);
         paintText(g);
+        getPath();
 
     }
 
@@ -231,7 +229,19 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         if (fromCity == null || toCity == null)
             return;
 
-        // dijkstra's algo code here
+        Node fromNode = null;
+        Node toNode = null;
+
+        for (Node node : pakistan) {
+            if (node.getCity().equals(fromCity))
+                fromNode = node;
+            else if (node.getCity().equals(toCity))
+                toNode = node;
+        }
+
+        if (fromNode != null)
+            Dijkstra.calculateShortestPath(fromNode);
+        Dijkstra.printPaths(pakistan, toNode);
 
     }
 

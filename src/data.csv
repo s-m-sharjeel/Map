@@ -1,16 +1,16 @@
 ﻿City,lat,lng,neighbouring cities
 Abbottabad,34.15,73.2167,Islamabad
 Attock,33.7667,72.3667,Rawalpindi, Chakwal, Mianwali, Sargodha, Khushab, Islamabad
-Bahawalpur,29.3956,71.6722,Multan, Rahim Yar Khan, Sahiwal, Dera Ghazi Khan
+Bahawalpur,29.3956,71.6722,Multan, Rahim Yar Khan, Sahiwal, Dera Ghazi Khan, Khanewal
 Bannu,32.9889,70.6056,Karak, Kohat, Dera Ismail Khan
 Charsadda,34.1453,71.7308,Peshawar, Mardan, Swabi, Nowshera
 Dera Ghazi Khan,30.05,70.6333,Rajanpur, Muzaffargarh, Sahiwal, Rajanpur, Jaffarabad, Bahawalpur, Rahim Yar Khan
 Dera Ismail Khan,31.8167,70.9167,Bannu, Sibi
-Faisalabad,31.418,73.079,Lahore, Jhang, Toba Tek Singh, Sargodha, Gujranwala, Sahiwal, Jaranwala, Okara
+Faisalabad,31.418,73.079,Lahore, Jhang, Toba Tek Singh, Sargodha, Gujranwala, Sahiwal, Jaranwala, Okara, Khanewal, Islamabad
 Gujranwala,32.15,74.1833,Lahore, Sheikhupura, Hafizabad, Sialkot, Gujrat, Mandi Bahauddin, Faisalabad, Sargodha
 Gujrat,32.5736,74.0789,Gujranwala, Jhelum, Sargodha, Mandi Bahauddin, Hafizabad, Jaranwala, Islamabad, Rawalpindi, Sialkot
-Hyderabad,25.3792,68.3683,Karachi, Mirpurkhas, Sanghar, Nawabshah, Tando Allahyar
-Islamabad,33.6989,73.0369,Rawalpindi, Abbottabad, Jhelum, Gujrat, Attock, Chakwal
+Hyderabad,25.3792,68.3683,Karachi, Mirpurkhas, Sanghar, Nawabshah, Tando Allahyar, Rahim Yar Khan
+Islamabad,33.6989,73.0369,Rawalpindi, Abbottabad, Jhelum, Gujrat, Attock, Chakwal, Faisalabad
 Jaffarabad,28.75,68,Dera Ghazi Khan, Rajanpur
 Jhelum,32.9333,73.7333,Rawalpindi, Gujrat, Sargodha, Mianwali, Khushab, Islamabad
 Karachi,24.86,67.01,Hyderabad, Thatta, Badin, Jamshoro, Gwadar, Lasbela
@@ -27,7 +27,7 @@ Nawabshah,26.2442,68.41,Hyderabad, Sanghar, Khairpur, Sukkur
 Okara,30.81,73.4597,Lahore, Sahiwal, Faisalabad, Multan, Sheikhupura
 Peshawar,34,71.5,Charsadda, Mardan, Nowshera, Kohat, Swabi, Malakand, Dir
 Quetta,30.192,67.007,Pashin, Chaman, Zhob, Dera Bugti, Kalat, Sibi, Khuzdar
-Rahim Yar Khan,28.4202,70.2952,Sahiwal, Multan, Khanewal, Rajanpur, Dera Ghazi Khan, Bahawalpur
+Rahim Yar Khan,28.4202,70.2952,Sahiwal, Multan, Khanewal, Rajanpur, Dera Ghazi Khan, Bahawalpur, Hyderabad
 Rawalpindi,33.6007,73.0679,Islamabad, Jhelum, Gujrat, Chakwal, Attock, Mianwali
 Sargodha,32.0836,72.6711,Mianwali, Khushab, Faisalabad, Jhang, Gujranwala, Sahiwal, Mandi Bahauddin, Bhakkar, Gujrat, Jhelum, Lahore
 Sheikhupura,31.7083,74,Lahore, Gujranwala, Sahiwal, Okara
@@ -51,7 +51,7 @@ Hafizabad,32.0709,73.688,Gujranwala, Gujrat, Lahore
 Mandi Bahauddin,32.5861,73.4917,Gujranwala, Gujrat, Sargodha
 Sanghar,26.0464,68.9481,Hyderabad, Nawabshah
 Tando Allahyar,25.4667,68.7167,Hyderabad
-Thatta,24.7461,67.9243,Karachi 
+Thatta,24.7461,67.9243,Karachi
 Badin,24.6558,68.8383,Karachi
 Jamshoro,25.4283,68.2822,Karachi
 Kalat,29.0258,66.59,Khuzdar, Quetta
@@ -62,7 +62,7 @@ Dir,35.1977,71.8749,Malakand, Mardan, Peshawar
 Swat,35.2227,72.4258,Malakand, Mardan
 Mohmand,34.5356,71.2874,Malakand, Mardan
 Bhakkar,31.6333,71.0667,Mianwali, Sargodha
-Khanewal,30.3017,71.9321,Multan, Rahim Yar Khan
+Khanewal,30.3017,71.9321,Multan, Rahim Yar Khan, Bahawalpur, Faisalabad
 Pashin,30.5833,67,Quetta
 Chaman,30.921,66.4597,Quetta
 Zhob,31.3417,69.4486,Quetta

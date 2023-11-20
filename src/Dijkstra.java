@@ -1,22 +1,21 @@
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class Dijkstra {
 
     public static void calculateShortestPath(Node source) {
         source.setDistance((float) 0);
-        Set<Node> settledNodes = new HashSet<>();
+        LinkedList<Node> settledNodes = new LinkedList<>();
         Queue<Node> unsettledNodes = new PriorityQueue<>(Collections.singleton(source));
         while (!unsettledNodes.isEmpty()) {
             Node currentNode = unsettledNodes.poll();
-            currentNode.getAdjacentNodes()
-                    .entrySet().stream()
-                    .filter(entry -> !settledNodes.contains(entry.getKey()))
-                    .forEach(entry -> {
-                        evaluateDistanceAndPath(entry.getKey(), entry.getValue(), currentNode);
-                        unsettledNodes.add(entry.getKey());
-                    });
+            for (Map.Entry<Node, Float> entry : currentNode.getAdjacentNodes().entrySet()) {
+                if (!settledNodes.contains(entry.getKey())) {
+                    evaluateDistanceAndPath(entry.getKey(), entry.getValue(), currentNode);
+                    unsettledNodes.add(entry.getKey());
+                }
+            }
             settledNodes.add(currentNode);
         }
     }
