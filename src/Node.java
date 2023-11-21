@@ -6,12 +6,15 @@ import java.util.Map;
 public class Node implements Comparable<Node> {
 
     private final City city;
-    private Float distance = Float.MAX_VALUE;
-    private List<Node> shortestPath = new LinkedList<>();
-    private Map<Node, Float> adjacentNodes = new HashMap<>();
+    private Float distance;
+    private List<Node> shortestPath;
+    private final Map<Node, Float> adjacentNodes;
 
     public Node(City city) {
         this.city = city;
+        distance = Float.MAX_VALUE;
+        shortestPath = new LinkedList<>();
+        adjacentNodes = new HashMap<>();
     }
 
     public void addAdjacentNode(Node node, Float weight) {
@@ -45,5 +48,15 @@ public class Node implements Comparable<Node> {
 
     public List<Node> getShortestPath() {
         return shortestPath;
+    }
+
+    public void resetNode() {
+        distance = Float.MAX_VALUE;
+        shortestPath = new LinkedList<>();
+    }
+
+    @Override
+    public String toString() {
+        return getCity().getName();
     }
 }

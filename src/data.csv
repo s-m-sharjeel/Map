@@ -13,7 +13,7 @@ Hyderabad,25.3792,68.3683,Karachi, Mirpurkhas, Sanghar, Nawabshah, Tando Allahya
 Islamabad,33.6989,73.0369,Rawalpindi, Abbottabad, Jhelum, Gujrat, Attock, Chakwal, Faisalabad
 Jaffarabad,28.75,68,Dera Ghazi Khan, Rajanpur
 Jhelum,32.9333,73.7333,Rawalpindi, Gujrat, Sargodha, Mianwali, Khushab, Islamabad
-Karachi,24.86,67.01,Hyderabad, Thatta, Badin, Jamshoro, Gwadar, Lasbela
+Karachi,24.86,67.01,Hyderabad, Thatta, Badin, Jamshoro, Lasbela
 Khuzdar,27.8,66.6167,Turbat, Kalat, Lasbela, Gwadar, Quetta, Sibi
 Kohat,33.5869,71.4414,Karak, Bannu, Peshawar
 Lahore,31.5497,74.3436,Faisalabad, Sheikhupura, Gujranwala, Sargodha, Hafizabad, Okara
@@ -23,7 +23,7 @@ Malakand,34.5656,71.9304,Dir, Swat, Mohmand, Mardan, Peshawar
 Mardan,34.1958,72.0447,Peshawar, Swabi, Swat, Malakand, Dir, Mohmand, Charsadda
 Mianwali,32.5853,71.5436,Attock, Jhelum, Sargodha, Bhakkar, Khushab, Rawalpindi
 Multan,30.1978,71.4711,Muzaffargarh, Bahawalpur, Sahiwal, Khanewal, Okara, Rahim Yar Khan
-Nawabshah,26.2442,68.41,Hyderabad, Sanghar, Khairpur, Sukkur
+Nawabshah,26.2442,68.41,Hyderabad, Sanghar, Khairpur
 Okara,30.81,73.4597,Lahore, Sahiwal, Faisalabad, Multan, Sheikhupura
 Peshawar,34,71.5,Charsadda, Mardan, Nowshera, Kohat, Swabi, Malakand, Dir
 Quetta,30.192,67.007,Pashin, Chaman, Zhob, Dera Bugti, Kalat, Sibi, Khuzdar
@@ -34,7 +34,7 @@ Sheikhupura,31.7083,74,Lahore, Gujranwala, Sahiwal, Okara
 Shikarpur,27.9556,68.6382,Sukkur, Jacobabad, Larkana, Kashmore
 Sialkot,32.5,74.5333,Gujranwala, Gujrat
 Sibi,29.543,67.8773,Dera Bugti, Dera Ismail Khan, Quetta, Khuzdar
-Sukkur,27.6995,68.8673,Jacobabad, Larkana, Shikarpur, Kashmore, Khairpur, Nawabshah
+Sukkur,27.6995,68.8673,Jacobabad, Larkana, Shikarpur, Kashmore, Khairpur
 Turbat,26.0031,63.0544,Gwadar, Khuzdar, Lasbela
 Chakwal,32.93,72.85,Attock, Islamabad, Rawalpindi
 Khushab,32.2917,72.35,Attock, Jhelum, Sargodha, Mianwali
@@ -55,7 +55,7 @@ Thatta,24.7461,67.9243,Karachi
 Badin,24.6558,68.8383,Karachi
 Jamshoro,25.4283,68.2822,Karachi
 Kalat,29.0258,66.59,Khuzdar, Quetta
-Gwadar,25.1264,62.3225,Karachi, Khuzdar, Lasbela, Turbat
+Gwadar,25.1264,62.3225, Khuzdar, Lasbela, Turbat
 Jacobabad,28.2769,68.4514,Larkana, Shikarpur, Sukkur
 Khairpur,27.5295,68.7592,Larkana, Nawabshah, Sukkur
 Dir,35.1977,71.8749,Malakand, Mardan, Peshawar

@@ -12,7 +12,7 @@ public class SwingTimerEx extends JFrame {
 
         add(new Map());
 
-        ImageIcon icon = new ImageIcon("./src/F.png");
+        ImageIcon icon = new ImageIcon("./src/pak.png");
         setIconImage(icon.getImage());
 
         setResizable(false);

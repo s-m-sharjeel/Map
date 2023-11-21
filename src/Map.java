@@ -112,9 +112,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         drawBoundary(g);
         drawCities(g);
-        drawLine(g);
         paintText(g);
-        getPath();
+        drawPath(g);
 
     }
 
@@ -192,14 +191,14 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
-    public void drawLine(Graphics g){
+    public void drawLine(Graphics g, City c1, City c2){
 
-        if (fromCity == null || toCity == null)
+        if (c1 == null || c2 == null)
             return;
 
         // using formula to calculate the distance between two cities using their coordinates
 
-        String distance =  "" + getDistance(fromCity, toCity);
+        String distance =  "" + getDistance(c1, c2);
         String[] temp = distance.split("\\.");
         distance = temp[0] + "." + temp[1].substring(0, 3) + " km";
 
@@ -209,12 +208,12 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         int stringWidth = m.stringWidth(distance);
         int stringHeight = m.getAscent() - m.getDescent();
 
-        int fromX = fromCity.getX();
-        int fromY = fromCity.getY();
-        int toX = toCity.getX();
-        int toY = toCity.getY();
+        int fromX = c1.getX();
+        int fromY = c1.getY();
+        int toX = c2.getX();
+        int toY = c2.getY();
 
-        g.drawString(distance, (fromX + toX)/2 - stringWidth/2, (fromY + toY)/2 + stringHeight/2);
+//        g.drawString(distance, (fromX + toX)/2 - stringWidth/2, (fromY + toY)/2 + stringHeight/2);
 
         g.setColor(Color.gray);
         g.drawLine(fromX, fromY, toX, toY);
@@ -222,26 +221,48 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * finds the shortest path between two cities
+     * finds the shortest path between the source and destination city
+     * @return the nodes in a linked list
      */
-    public void getPath() {
+    public LinkedList<Node> getPath() {
 
-        if (fromCity == null || toCity == null)
-            return;
+        if (fromCity != null && toCity != null) {
 
-        Node fromNode = null;
-        Node toNode = null;
+            LinkedList<Node> path = new LinkedList<>();
 
-        for (Node node : pakistan) {
-            if (node.getCity().equals(fromCity))
-                fromNode = node;
-            else if (node.getCity().equals(toCity))
-                toNode = node;
+            Node fromNode = null;
+            Node toNode = null;
+
+            for (Node node : pakistan) {
+                if (node.getCity().getName().equals(fromCity.getName()))
+                    fromNode = node;
+                else if (node.getCity().getName().equals(toCity.getName()))
+                    toNode = node;
+            }
+
+            assert fromNode != null;
+
+            Dijkstra.calculateShortestPath(fromNode);
+            path = Dijkstra.getPath(pakistan, toNode);
+
+            return path;
+
         }
 
-        if (fromNode != null)
-            Dijkstra.calculateShortestPath(fromNode);
-        Dijkstra.printPaths(pakistan, toNode);
+        return null;
+
+    }
+
+    private void drawPath(Graphics g) {
+
+        LinkedList<Node> path = getPath();
+
+        if (path == null)
+            return;
+
+        for (int i = 0; i < path.size() - 1; i++) {
+            drawLine(g, path.get(i).getCity(), path.get(i + 1).getCity());
+        }
 
     }
 
@@ -254,6 +275,10 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         int x = e.getX();
         int y = e.getY();
+
+        for (Node node: pakistan) {
+            node.resetNode();
+        }
 
         // resetting if none of the cities has been selected
         if (fromCity != null && toCity != null){
@@ -291,6 +316,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Toolkit.getDefaultToolkit().sync();
+        // the gui is repainted everytime any action is performed
         repaint();
     }
 
@@ -330,20 +356,31 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
 	}
 
+    /**
+     * finds the x value on the GUI corresponding to the longitude
+     * @param lng is the longitude of the map-coordinates
+     * @return the x-value
+     */
     public static int getXFromLNG(float lng){
         return (Math.round(lng*40)) - 2350;
     }
 
+    /**
+     * finds the y value on the GUI corresponding to the latitude
+     * @param lat is the latitude of the map-coordinates
+     * @return the y-value
+     */
     public static int getYFromLAT(float lat){
         return Toolkit.getDefaultToolkit().getScreenSize().height + 1050 - (Math.round(lat*50));
     }
 
+    /**
+     * calculates the distance between two cities
+     * @param c1 is the city1
+     * @param c2 is the city2
+     * @return the distance in kms
+     */
     public static float getDistance(City c1, City c2) {
-
-        int fromX = c1.getX();
-        int fromY = c1.getY();
-        int toX = c2.getX();
-        int toY = c2.getY();
 
         double lng = (Math.abs(c1.getLng() - c2.getLng())*111.321);
         double lat = (Math.abs(c1.getLat() - c2.getLat())*68.703);

@@ -28,19 +28,24 @@ public class Dijkstra {
         }
     }
 
-    public static void printPaths(List<Node> nodes, Node destination) {
+    public static LinkedList<Node> getPath(List<Node> nodes, Node destination) {
+        LinkedList<Node> paths = new LinkedList<>();
         for (Node node : nodes) {
             if (!node.equals(destination))
                 continue;
             StringJoiner joiner = new StringJoiner(" -> ");
             for (Node node1 : node.getShortestPath()) {
                 City city = node1.getCity();
+                paths.add(node1);
                 joiner.add(city.getName());
             }
             String path = joiner.toString();
-            if (!path.isBlank())
-                System.out.printf("%s -> %s : %s%n", path, node.getCity(), node.getDistance());
+            if (!path.isBlank()) {
+//                System.out.printf("%s -> %s : %s%n", path, node.getCity(), node.getDistance());
+                paths.add(destination);
+            }
         }
+        return paths;
     }
 
 }
