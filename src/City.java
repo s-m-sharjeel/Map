@@ -8,7 +8,7 @@ public class City {
     private final int x;
     private final int y;
     private final int size = 4;
-    private final Color color = Color.black;
+    private final Color color = Color.white;
     private boolean pressed;
     private boolean hovered;
 
@@ -74,13 +74,13 @@ public class City {
         int stringHeight = m.getAscent() - m.getDescent();
 
         g.setColor(Color.white);
-        g.fillRect(x, y, stringWidth + 6, stringHeight + 6);
+        g.fillRect(x - (stringWidth + 6), y - (stringHeight + 6), stringWidth + 6, stringHeight + 6);
 
         g.setColor(Color.black);
-        g.drawRect(x, y, stringWidth + 6, stringHeight + 6);
+        g.drawRect(x - (stringWidth + 6), y - (stringHeight + 6), stringWidth + 6, stringHeight + 6);
 
         g.setColor(Color.black);
-        g.drawString(name, x + 3, y + stringHeight + 3);
+        g.drawString(name, x + 3 - (stringWidth + 6), y + stringHeight + 3 - (stringHeight + 6));
 
     }
 

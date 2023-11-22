@@ -5,18 +5,28 @@ import java.util.Set;
 
 class Graph{
 
-    private final LinkedList<Node> nodes;
+    int nodeCount;
 
-    public Graph() {
-        nodes = new LinkedList<>();
+    private final Node[] nodes;
+
+    public Graph(int size) {
+        nodes = new Node[size];
+        nodeCount = 0;
     }
 
-    public LinkedList<Node> getNodes() {
+    public Node[] getNodes() {
         return nodes;
     }
 
     public void addNode(Node node){
-        nodes.add(node);
+        if (isFull())
+            throw new RuntimeException("Graph is full!");
+
+        nodes[nodeCount++] = node;
+    }
+
+    private boolean isFull() {
+        return nodeCount == nodes.length;
     }
 
 }

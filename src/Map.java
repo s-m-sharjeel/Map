@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -14,7 +15,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private final int B_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width/2;
     private final int B_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-    private LinkedList<Node> pakistan;
+    private Graph pakistan;
     private City fromCity;
     private City toCity;
 
@@ -27,7 +28,9 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      */
     private void InitializeAssets() {
 
-        Graph pak = new Graph();
+        // no. of cities for which the data is available
+        int size = 66;
+        pakistan = new Graph(size);
 
         try{
 
@@ -36,9 +39,9 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
             input1.nextLine();
 
-            Node[] nodes = new Node[69];
+            Node[] nodes = new Node[size];
 
-            for (int i = 0; i < 69; i++) {
+            for (int i = 0; i < size; i++) {
                 String line = input1.nextLine();
                 String[] data = line.split(",");
 
@@ -55,7 +58,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             input2.nextLine();
 
             // for each city
-            for (int i = 0; i < 69; i++) {
+            for (int i = 0; i < size; i++) {
 
                 Node node = nodes[i];
                 String line = input2.nextLine();
@@ -63,7 +66,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
                 for (int j = 3; j < data.length; j++) {
 
-                    for (int k = 0; k < 69; k++) {
+                    for (int k = 0; k < size; k++) {
 
                         if (nodes[k].getCity().getName().equals(data[j].trim())) {
                             node.addAdjacentNode(nodes[k], getDistance(node.getCity(), nodes[k].getCity()));
@@ -74,7 +77,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
                 }
 
-                pak.addNode(node);
+                pakistan.addNode(node);
 
             }
 
@@ -84,14 +87,23 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             System.out.println("File not found!");
         }
 
-        pakistan = pak.getNodes();
 
     }
 
     private void initMap() {
 
-        //https://simplemaps.com/data/world-cities
-        //https://data.humdata.org/dataset/a64d1ff2-7158-48c7-887d-6af69ce21906
+        /*
+
+         for city coordinates:
+         https://simplemaps.com/data/world-cities
+
+         for verification of neighbouring cities
+         https://data.humdata.org/dataset/a64d1ff2-7158-48c7-887d-6af69ce21906
+
+         for pakistan boundary:
+         https://cartographyvectors.com/map/998-pakistan-detailed-boundary
+
+         */
 
         InitializeAssets();
 
@@ -101,7 +113,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         setFocusable(true);
 
-        int DELAY = 25;
+        int DELAY = 10;
         Timer timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -109,6 +121,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        setBackground(new Color(0, 64, 26));
 
         drawBoundary(g);
         drawCities(g);
@@ -123,7 +137,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      */
     public void paintText(Graphics g) {
 
-        g.setColor(Color.black);
+        g.setColor(Color.white);
         g.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
         String str = "PAKISTAN";
         g.drawString(str, B_WIDTH/3 - g.getFontMetrics().stringWidth(str)/2, 60 + 40);
@@ -148,8 +162,9 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      */
     public void drawBoundary(Graphics g) {
 
-        File file = new File("./src/pakgeojson.wkt");
+        File file = new File("./src/pak_boundary.wkt");
         StringBuilder data = new StringBuilder();
+
         try {
             Scanner input = new Scanner(file);
             while(input.hasNext()) {
@@ -163,19 +178,27 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         g2.setColor(Color.black);
         g2.setStroke(new BasicStroke(2));
         String[] coordinates = data.toString().split(",");
-        LinkedList<Point> boundary = new LinkedList<>();
+        int size = coordinates.length;
 
-        for (int i = 0; i < coordinates.length; i++) {
+        int[] x = new int[size];
+        int[] y = new int[size];
+
+        for (int i = 0; i < size; i++) {
             coordinates[i] = coordinates[i].trim();
             String[] arr = coordinates[i].split(" ");
             float lng = Float.parseFloat(arr[0].trim());
             float lat = Float.parseFloat(arr[1].trim());
-            boundary.add(new Point(getXFromLNG(lng), getYFromLAT(lat)));
-            if (i != 0) {
-                g2.drawLine(boundary.get(i - 1).x, boundary.get(i - 1).y, boundary.get(i).x, boundary.get(i).y);
-            } else g2.fillOval(boundary.get(i).x, boundary.get(i).y, 2, 2);
+            x[i] = getXFromLNG(lng);
+            y[i] = getYFromLAT(lat);
         }
+
         g2.setStroke(new BasicStroke(1));
+
+        Polygon poly = new Polygon(x, y, size);
+        g.setColor(new Color(121, 190, 88));
+        g.fillPolygon(poly);
+        g.setColor(Color.black);
+        g.drawPolygon(poly);
 
     }
 
@@ -185,7 +208,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      */
     private void drawCities(Graphics g) {
 
-        for (Node v : pakistan) {
+        for (Node v : pakistan.getNodes()) {
             v.getCity().draw(g);
         }
 
@@ -198,24 +221,24 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         // using formula to calculate the distance between two cities using their coordinates
 
-        String distance =  "" + getDistance(c1, c2);
-        String[] temp = distance.split("\\.");
-        distance = temp[0] + "." + temp[1].substring(0, 3) + " km";
+//        float num = getDistance(c1, c2);
+//        DecimalFormat decimalFormator = new DecimalFormat("0.000");
+//        String distance = decimalFormator.format(num) + " km";
 
-        g.setColor(Color.red);
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
-        FontMetrics m = g.getFontMetrics();
-        int stringWidth = m.stringWidth(distance);
-        int stringHeight = m.getAscent() - m.getDescent();
+//        g.setColor(Color.red);
+//        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+//        FontMetrics m = g.getFontMetrics();
+//        int stringWidth = m.stringWidth(distance);
+//        int stringHeight = m.getAscent() - m.getDescent();
+//        g.drawString(distance, (fromX + toX)/2 - stringWidth/2, (fromY + toY)/2 + stringHeight/2);
 
         int fromX = c1.getX();
         int fromY = c1.getY();
         int toX = c2.getX();
         int toY = c2.getY();
 
-//        g.drawString(distance, (fromX + toX)/2 - stringWidth/2, (fromY + toY)/2 + stringHeight/2);
 
-        g.setColor(Color.gray);
+        g.setColor(Color.white);
         g.drawLine(fromX, fromY, toX, toY);
 
     }
@@ -233,7 +256,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             Node fromNode = null;
             Node toNode = null;
 
-            for (Node node : pakistan) {
+            for (Node node : pakistan.getNodes()) {
                 if (node.getCity().getName().equals(fromCity.getName()))
                     fromNode = node;
                 else if (node.getCity().getName().equals(toCity.getName()))
@@ -242,8 +265,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
             assert fromNode != null;
 
-            Dijkstra.calculateShortestPath(fromNode);
-            path = Dijkstra.getPath(pakistan, toNode);
+            path = Dijkstra.getShortestPath(fromNode, toNode);
 
             return path;
 
@@ -260,9 +282,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         if (path == null)
             return;
 
-        for (int i = 0; i < path.size() - 1; i++) {
+        for (int i = 0; i < path.size() - 1; i++)
             drawLine(g, path.get(i).getCity(), path.get(i + 1).getCity());
-        }
 
     }
 
@@ -276,13 +297,11 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         int x = e.getX();
         int y = e.getY();
 
-        for (Node node: pakistan) {
-            node.resetNode();
-        }
+        Dijkstra.reset(pakistan);
 
         // resetting if none of the cities has been selected
         if (fromCity != null && toCity != null){
-            for (Node v : pakistan) {
+            for (Node v : pakistan.getNodes()) {
                 v.getCity().setPressed(false);
             }
             fromCity = null;
@@ -291,7 +310,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         // setting the source city as the one pressed (if any)
         if (fromCity == null){
-            for (Node v : pakistan) {
+            for (Node v : pakistan.getNodes()) {
                 v.getCity().isClicked(x, y);
                 if (v.getCity().isPressed()) {
                     fromCity = v.getCity();
@@ -301,7 +320,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         } else {
             // setting the destination
-            for (Node v : pakistan) {
+            for (Node v : pakistan.getNodes()) {
                 City city = v.getCity();
                 city.isClicked(x, y);
                 if (city.isPressed() && !city.equals(fromCity)) {
@@ -350,7 +369,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         // displays the name of the city when hovered
 
-        for (Node v : pakistan) {
+        for (Node v : pakistan.getNodes()) {
             v.getCity().isHovered(e.getX(), e.getY());
         }
 

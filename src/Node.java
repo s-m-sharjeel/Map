@@ -7,7 +7,7 @@ public class Node implements Comparable<Node> {
 
     private final City city;
     private Float distance;
-    private List<Node> shortestPath;
+    private LinkedList<Node> shortestPath;
     private final Map<Node, Float> adjacentNodes;
 
     public Node(City city) {
@@ -42,11 +42,11 @@ public class Node implements Comparable<Node> {
         return adjacentNodes;
     }
 
-    public void setShortestPath(List<Node> shortestPath) {
+    public void setShortestPath(LinkedList<Node> shortestPath) {
         this.shortestPath = shortestPath;
     }
 
-    public List<Node> getShortestPath() {
+    public LinkedList<Node> getShortestPath() {
         return shortestPath;
     }
 
