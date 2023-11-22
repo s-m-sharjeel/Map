@@ -18,14 +18,6 @@ public class City {
         this.lng = lng;
         this.x = Map.getXFromLNG(lng);
         this.y = Map.getYFromLAT(lat);
-//        switch (admin_name) {
-//            case "Sindh" -> this.color = Color.red;
-//            case "Punjab" -> this.color = Color.green;
-//            case "Khyber Pakhtunkhwa" -> this.color = Color.pink;
-//            case "Balochistan" -> this.color = Color.orange;
-//            case "Azad Kashmir" -> this.color = Color.cyan;
-//            case "Gilgit-Baltistan" -> this.color = Color.blue;
-//        }
     }
 
     public void draw(Graphics g){
@@ -37,13 +29,13 @@ public class City {
         g2.drawOval(x - size, y - size, size*2, size*2);
 
         if (hovered) {
-            g2.setColor(Color.lightGray);
+            g2.setColor(new Color(121, 190, 88));
             g2.fillOval(x - size, y - size, size*2, size*2);
             drawToolTip(g);
         }
 
         if (pressed) {
-            g2.setColor(Color.gray);
+            g2.setColor(new Color(0, 64, 26));
             g2.fillOval(x - size, y - size, size*2, size*2);
         }
 

@@ -16,6 +16,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private final int B_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
     private Graph pakistan;
+    private Polygon[] regions;
     private City fromCity;
     private City toCity;
 
@@ -87,6 +88,40 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             System.out.println("File not found!");
         }
 
+        File file = new File("./src/pakgeojson.wkt");
+        String data;
+
+        regions = new Polygon[8];
+
+        try {
+            Scanner input = new Scanner(file);
+            for (int i = 0; i < regions.length; i++) {
+                input.next();
+                data = input.nextLine();
+                String[] coordinates = data.split(",");
+                int points = coordinates.length;
+
+                int[] x = new int[points];
+                int[] y = new int[points];
+
+                for (int j = 0; j < points; j++) {
+                    coordinates[j] = coordinates[j].trim();
+                    String[] arr = coordinates[j].split(" ");
+                    float lng = Float.parseFloat(arr[0].trim());
+                    float lat = Float.parseFloat(arr[1].trim());
+                    x[j] = getXFromLNG(lng);
+                    y[j] = getYFromLAT(lat);
+                }
+
+                regions[i] = new Polygon(x, y, points);
+                System.out.println(points);
+
+            }
+
+            input.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -162,43 +197,18 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      */
     public void drawBoundary(Graphics g) {
 
-        File file = new File("./src/pak_boundary.wkt");
-        StringBuilder data = new StringBuilder();
-
-        try {
-            Scanner input = new Scanner(file);
-            while(input.hasNext()) {
-                data.append(input.nextLine());
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.black);
         g2.setStroke(new BasicStroke(2));
-        String[] coordinates = data.toString().split(",");
-        int size = coordinates.length;
 
-        int[] x = new int[size];
-        int[] y = new int[size];
-
-        for (int i = 0; i < size; i++) {
-            coordinates[i] = coordinates[i].trim();
-            String[] arr = coordinates[i].split(" ");
-            float lng = Float.parseFloat(arr[0].trim());
-            float lat = Float.parseFloat(arr[1].trim());
-            x[i] = getXFromLNG(lng);
-            y[i] = getYFromLAT(lat);
+        for (Polygon region : regions) {
+            g.setColor(new Color(121, 190, 88));
+            g.fillPolygon(region);
+            g.setColor(Color.black);
+            g.drawPolygon(region);
         }
 
         g2.setStroke(new BasicStroke(1));
-
-        Polygon poly = new Polygon(x, y, size);
-        g.setColor(new Color(121, 190, 88));
-        g.fillPolygon(poly);
-        g.setColor(Color.black);
-        g.drawPolygon(poly);
 
     }
 
@@ -381,7 +391,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      * @return the x-value
      */
     public static int getXFromLNG(float lng){
-        return (Math.round(lng*40)) - 2350;
+        return (Math.round(lng*40)) - 2375;
     }
 
     /**
