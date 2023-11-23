@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class City {
+public class City{
 
     private final String name;
     private final float lat;
@@ -31,7 +31,7 @@ public class City {
         if (hovered) {
             g2.setColor(new Color(121, 190, 88));
             g2.fillOval(x - size, y - size, size*2, size*2);
-            drawToolTip(g);
+            displayName(g);
         }
 
         if (pressed) {
@@ -46,7 +46,7 @@ public class City {
 
         // euclidean distance
         if ((x - this.x)*(x - this.x) + (y - this.y)*(y - this.y) < size*size)
-            pressed = !pressed;
+            pressed = true;
 
     }
 
@@ -57,22 +57,22 @@ public class City {
 
     }
 
-    private void drawToolTip(Graphics g){
+    private void displayName(Graphics g){
 
         g.setColor(Color.black);
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 8));
         FontMetrics m = g.getFontMetrics();
         int stringWidth = m.stringWidth(name);
         int stringHeight = m.getAscent() - m.getDescent();
 
-        g.setColor(Color.white);
-        g.fillRect(x - (stringWidth + 6), y - (stringHeight + 6), stringWidth + 6, stringHeight + 6);
+//        g.setColor(Color.white);
+//        g.fillRect(x - (stringWidth + 6), y - (stringHeight + 6), stringWidth + 6, stringHeight + 6);
+//
+//        g.setColor(Color.black);
+//        g.drawRect(x - (stringWidth + 6), y - (stringHeight + 6), stringWidth + 6, stringHeight + 6);
 
         g.setColor(Color.black);
-        g.drawRect(x - (stringWidth + 6), y - (stringHeight + 6), stringWidth + 6, stringHeight + 6);
-
-        g.setColor(Color.black);
-        g.drawString(name, x + 3 - (stringWidth + 6), y + stringHeight + 3 - (stringHeight + 6));
+        g.drawString(name, x - (stringWidth/2), y - stringHeight/2 - size/2 - 1);
 
     }
 

@@ -48,7 +48,6 @@ public class Dijkstra {
 ////                System.out.printf("%s -> %s : %s%n", path, node.getCity(), node.getDistance());
 //            paths.add(destination);
 //        }
-//        return paths;
         return paths;
     }
 
