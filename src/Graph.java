@@ -1,32 +1,27 @@
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-
 class Graph{
 
-    int nodeCount;
+    int vertexCount;
 
-    private final Node[] nodes;
+    private final Vertex[] vertices;
 
     public Graph(int size) {
-        nodes = new Node[size];
-        nodeCount = 0;
+        vertices = new Vertex[size];
+        vertexCount = 0;
     }
 
-    public Node[] getNodes() {
-        return nodes;
+    public Vertex[] getVertices() {
+        return vertices;
     }
 
-    public void addNode(Node node){
+    public void addVertex(Vertex vertex){
         if (isFull())
             throw new RuntimeException("Graph is full!");
 
-        nodes[nodeCount++] = node;
+        vertices[vertexCount++] = vertex;
     }
 
     private boolean isFull() {
-        return nodeCount == nodes.length;
+        return vertexCount == vertices.length;
     }
 
 }

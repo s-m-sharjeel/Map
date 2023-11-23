@@ -4,7 +4,6 @@ import java.awt.*;
 public class SwingTimerEx extends JFrame {
 
     public SwingTimerEx() {
-
         initUI();
     }
 
