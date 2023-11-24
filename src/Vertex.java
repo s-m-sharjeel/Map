@@ -3,21 +3,26 @@ public class Vertex implements Comparable<Vertex> {
     private final City city;
     private Float shortestDistance;
     private LinkedList<Vertex> shortestPath;
-//    private final Map<Vertex, Float> adjacentVertices;
-//    private Vertex[] adjacentVertices;
-    private LinkedList<Vertex> adjacentVertices;
-    private int vertexCount = 0;
+    private Vertex[] adjacentVertices;
+//    private final LinkedList<Vertex> adjacentVertices;
+    private int vertexCount;
 
 
     public Vertex(City city) {
         this.city = city;
         shortestDistance = Float.MAX_VALUE;
         shortestPath = new LinkedList<>();
-        adjacentVertices = new LinkedList<>();
+//        adjacentVertices = new LinkedList<>();
+        vertexCount = 0;
+    }
+
+    public void setSize(int size) {
+        adjacentVertices = new Vertex[size];
     }
 
     public void addAdjacentVertex(Vertex vertex) {
-        adjacentVertices.add(vertex);
+        adjacentVertices[vertexCount] = vertex;
+        vertexCount++;
     }
 
     @Override
@@ -37,7 +42,7 @@ public class Vertex implements Comparable<Vertex> {
         return city;
     }
 
-    public LinkedList<Vertex> getAdjacentVertices() {
+    public Vertex[] getAdjacentVertices() {
         return adjacentVertices;
     }
 

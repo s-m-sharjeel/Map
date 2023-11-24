@@ -23,6 +23,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private final Color dark_green = new Color(0, 64, 26);
     private final Color light_green = new Color(121, 190, 88);
     private LinkedList<Vertex> path;
+    private boolean calculated;
 
     public Map() {
         initMap();
@@ -34,7 +35,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private void InitializeAssets() {
 
         // no. of cities for which the data is available
-        int size = 70;
+        int size = 73;
         pakistan = new Graph(size);
 
         try{
@@ -68,6 +69,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
                 Vertex vertex = vertices[i];
                 String line = input2.nextLine();
                 String[] data = line.split(",");
+                vertex.setSize(data.length - 3);
 
                 for (int j = 3; j < data.length; j++) {
 
@@ -162,6 +164,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         setBackground(dark_green);
 
         drawBoundary(g);
+        drawRoads(g);
         drawPath(g);
         drawCities(g);
         paintText(g);
@@ -244,7 +247,17 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
-    public void drawLine(Graphics g, City c1, City c2){
+    private void drawRoads(Graphics g) {
+
+        for (Vertex v1 : pakistan.getVertices()) {
+            for (Vertex v2: v1.getAdjacentVertices()) {
+                drawLine(g, v1.getCity(), v2.getCity(), Color.black);
+            }
+        }
+
+    }
+
+    public void drawLine(Graphics g, City c1, City c2, Color color){
 
         if (c1 == null || c2 == null)
             return;
@@ -257,7 +270,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setStroke(new BasicStroke(2));
-        g2.setColor(Color.white);
+        g2.setColor(color);
         g2.drawLine(fromX, fromY, toX, toY);
         g2.setStroke(new BasicStroke(1));
 
@@ -270,6 +283,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         if (fromVertex != null && toVertex != null) {
 
+            for (Vertex vertex : pakistan.getVertices())
+                vertex.resetNode();
             path = Dijkstra.getShortestPath(fromVertex, toVertex);
 
         }
@@ -283,8 +298,9 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             return;
         }
 
+        g.setColor(Color.white);
         for (int i = 0; i < path.size() - 1; i++)
-            drawLine(g, path.get(i).getCity(), path.get(i + 1).getCity());
+            drawLine(g, path.get(i).getCity(), path.get(i + 1).getCity(), Color.white);
 
         writePathDetails(g);
 
@@ -313,8 +329,6 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         int x = e.getX();
         int y = e.getY();
 
-        Dijkstra.reset(pakistan);
-
         // resetting if none of the cities has been selected
         if (fromVertex != null && toVertex != null){
             for (Vertex v : pakistan.getVertices()) {
@@ -322,6 +336,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             }
             fromVertex = null;
             toVertex = null;
+            calculated = false;
         }
 
         // setting the source city as the one pressed (if any)

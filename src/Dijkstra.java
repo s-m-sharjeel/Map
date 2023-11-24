@@ -1,22 +1,26 @@
 public class Dijkstra {
 
+    /**
+     * finds the shortest path from a vertex to all the other vertices in the graph using BFS
+     * @param source is the source vertex
+     */
     public static void calculateShortestPath(Vertex source) {
 
         source.setShortestDistance((float) 0);
         LinkedList<Vertex> settledVertices = new LinkedList<>();
-        Queue<Vertex> unsettledVertices = new Queue<>();
-        unsettledVertices.enqueue(source);
+        PriorityQueue<Vertex> unsettledVertices = new PriorityQueue<>();
+        unsettledVertices.enqueue(source);  // O(n), because it is sorted at the time of enqueuing in a priority list
         while (!unsettledVertices.isEmpty()) {
-            Vertex currentVertex = unsettledVertices.dequeue();
-            for (int i = 0; i < currentVertex.getAdjacentVertices().size(); i++) {
-                if (!settledVertices.contains(currentVertex.getAdjacentVertices().get(i))) {
-                    evaluateDistanceAndPath(currentVertex.getAdjacentVertices().get(i), Map.getDistance(currentVertex.getAdjacentVertices().get(i).getCity(), currentVertex.getCity()), currentVertex);
-                    // enqueueing the adjacent nodes of the current node
-                    unsettledVertices.enqueue(currentVertex.getAdjacentVertices().get(i));
+            Vertex currentVertex = unsettledVertices.dequeue(); // O(1)
+            for (int i = 0; i < currentVertex.getAdjacentVertices().length; i++) {  // O(n)
+                Vertex adjacentVertex = currentVertex.getAdjacentVertices()[i]; // O(1) because of the use of array (random access)
+                if (!settledVertices.contains(adjacentVertex)) {
+                    evaluateDistanceAndPath(adjacentVertex, Map.getDistance(adjacentVertex.getCity(), currentVertex.getCity()), currentVertex);
+                    unsettledVertices.enqueue(adjacentVertex);  // enqueueing the adjacent nodes of the current node in constant time
                 }
             }
-
-            settledVertices.add(currentVertex);
+            // order doesn't matter, so insertion in constant time is preferred
+            settledVertices.addFirst(currentVertex);
         }
     }
 
@@ -27,16 +31,17 @@ public class Dijkstra {
      * @param edgeWeight is the distance between them
      */
     private static void evaluateDistanceAndPath(Vertex adjacentVertex, Float edgeWeight, Vertex sourceVertex) {
+
         // calculates the new distance from the absolute source
         Float newDistance = sourceVertex.getShortestDistance() + edgeWeight;
         if (newDistance < adjacentVertex.getShortestDistance()) {
             adjacentVertex.setShortestDistance(newDistance);
             LinkedList<Vertex> linkedList = sourceVertex.getShortestPath();
-            LinkedList<Vertex> list = new LinkedList<>();
+            LinkedList<Vertex> list = new LinkedList<>(linkedList);
 
-            // hard copying list
-            for (int i = 0; i < linkedList.size(); i++)
-                list.add(linkedList.get(i));
+//            // deep copying elements from list
+//            for (int i = 0; i < linkedList.size(); i++)
+//                list.add(linkedList.get(i));
 
             // adding the source vertex to its own shortest path list
             list.add(sourceVertex);
@@ -44,23 +49,27 @@ public class Dijkstra {
         }
     }
 
+    /**
+     * gets the shortest path of the destination vertex from the source vertex
+     * @param destination is the destination vertex
+     * @return the shortest path
+     */
     private static LinkedList<Vertex> getPath(Vertex destination) {
         LinkedList<Vertex> paths = destination.getShortestPath();
         paths.add(destination);
         return paths;
     }
 
+    /**
+     * gets the shortest path from the source to the destination
+     * @param from is the source vertex
+     * @param to is the destination vertex
+     * @return the shortest path
+     */
     public static LinkedList<Vertex> getShortestPath(Vertex from, Vertex to) {
 
         calculateShortestPath(from);
         return getPath(to);
-
-    }
-
-    public static void reset(Graph graph) {
-
-        for (Vertex vertex : graph.getVertices())
-            vertex.resetNode();
 
     }
 

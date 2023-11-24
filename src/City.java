@@ -20,6 +20,10 @@ public class City{
         this.y = Map.getYFromLAT(lat);
     }
 
+    /**
+     * draws the city on the map
+     * @param g is the graphics
+     */
     public void draw(Graphics g){
 
         Graphics2D g2 = (Graphics2D) g;
@@ -42,6 +46,11 @@ public class City{
         g2.setStroke(new BasicStroke(1));
     }
 
+    /**
+     * changes the state to pressed if clicked within the bounds of the button
+     * @param x is the horizontal component of the click
+     * @param y is the vertical component of the click
+     */
     public void isClicked(int x, int y){
 
         // euclidean distance
@@ -50,6 +59,11 @@ public class City{
 
     }
 
+    /**
+     * changes the state to hovered if clicked within the bounds of the button
+     * @param x is the horizontal component of the click
+     * @param y is the vertical component of the click
+     */
     public void isHovered(int x, int y){
 
         // euclidean distance
@@ -57,6 +71,10 @@ public class City{
 
     }
 
+    /**
+     * displays the name of the city on top of its marker
+     * @param g is the graphics
+     */
     private void displayName(Graphics g){
 
         g.setColor(Color.black);
@@ -75,6 +93,8 @@ public class City{
         g.drawString(name, x - (stringWidth/2), y - stringHeight/2 - size/2 - 1);
 
     }
+
+    // getter/setter:
 
     public String getName() {
         return name;

@@ -1,5 +1,13 @@
+/**
+ * My Singly Linked list class
+ * @param <T> is the generic parameter
+ */
 public class LinkedList<T> {
 
+    /**
+     * private node class for the linked list
+     * @param <T> is the generic parameter
+     */
     public static class Node<T>{
 
         T data;
@@ -16,6 +24,25 @@ public class LinkedList<T> {
 
     public LinkedList() {
         size = 0;
+    }
+
+    public LinkedList(LinkedList<T> list) {
+
+        if (list.isEmpty())
+            return;
+
+        this.size = list.size;
+        this.head = new Node<>(list.head.data);
+
+        Node<T> current1 = list.head;
+        Node<T> current2 = this.head;
+
+        while (current1.next != null) {
+            current1 = current1.next;
+            current2.next = new Node<>(current1.data);
+            current2 = current2.next;
+        }
+
     }
 
     /**
@@ -39,6 +66,25 @@ public class LinkedList<T> {
         }
 
         current.next = newNode;
+
+    }
+
+    /**
+     * insertion at the start of the list
+     * @param data is the data to be inserted
+     */
+    public void addFirst(T data) {
+
+        Node<T> newNode = new Node<T>(data);
+        size++;
+
+        if (isEmpty()) {
+            head = newNode;
+            return;
+        }
+
+        newNode.next = head;
+        head = newNode;
 
     }
 
