@@ -2,25 +2,10 @@
  * My Singly Linked list class
  * @param <T> is the generic parameter
  */
-public class LinkedList<T> {
+public class LinkedList<T extends Comparable<T>> {
 
-    /**
-     * private node class for the linked list
-     * @param <T> is the generic parameter
-     */
-    public static class Node<T>{
-
-        T data;
-        Node<T> next;
-
-        public Node(T data) {
-            this.data = data;
-        }
-
-    }
-
-    Node<T> head;
-    int size;
+    private Node<T> head;
+    private int size;
 
     public LinkedList() {
         size = 0;

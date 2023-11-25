@@ -1,15 +1,5 @@
 public class PriorityQueue<T extends Comparable<T>>{
 
-    private static class Node<T> {
-
-        Node<T> next;
-        T data;
-
-        public Node(T data) {
-            this.data = data;
-        }
-    }
-
     Node<T> front;
     Node<T> rear;
 

@@ -175,7 +175,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      * paints text on the panel
      * @param g is the graphics
      */
-    public void paintText(Graphics g) {
+    private void paintText(Graphics g) {
 
         String font_style = Font.SERIF;
         Color font_color = Color.white;
@@ -218,7 +218,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      * draws the boundary of pakistan
      * @param g is the graphics
      */
-    public void drawBoundary(Graphics g) {
+    private void drawBoundary(Graphics g) {
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.black);
@@ -257,7 +257,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
-    public void drawLine(Graphics g, City c1, City c2, Color color){
+    private void drawLine(Graphics g, City c1, City c2, Color color){
 
         if (c1 == null || c2 == null)
             return;
