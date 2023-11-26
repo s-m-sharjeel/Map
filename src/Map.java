@@ -10,9 +10,6 @@ import java.util.Scanner;
 
 public class Map extends JPanel implements ActionListener , MouseInputListener {
 
-//    private final int B_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width/2;
-//    private final int B_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height - 100;
-
     private static final int B_WIDTH = 760 * 2;
     private static final int B_HEIGHT = 760;
 
@@ -23,7 +20,6 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private final Color dark_green = new Color(0, 64, 26);
     private final Color light_green = new Color(121, 190, 88);
     private LinkedList<Vertex> path;
-    private boolean calculated;
 
     public Map() {
         initMap();
@@ -33,6 +29,16 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      * initializes the cities by reading the file
      */
     private void InitializeAssets() {
+
+        constructGraph();
+        constructRegions();
+
+    }
+
+    /**
+     * constructs the graph from the data file
+     */
+    private void constructGraph() {
 
         // no. of cities for which the data is available
         int size = 73;
@@ -45,8 +51,6 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
             input1.nextLine();
 
-            Vertex[] vertices = new Vertex[size];
-
             for (int i = 0; i < size; i++) {
                 String line = input1.nextLine();
                 String[] data = line.split(",");
@@ -54,7 +58,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
                 City city = (new City(data[0], Float.parseFloat(data[1]), Float.parseFloat(data[2])));
 
                 Vertex vertex = new Vertex(city);
-                vertices[i] = vertex;
+                vertex.setSize(data.length - 3);
+                pakistan.addVertex(vertex);
             }
 
             input1.close();
@@ -66,25 +71,12 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             // for each city
             for (int i = 0; i < size; i++) {
 
-                Vertex vertex = vertices[i];
+                Vertex vertex = pakistan.getVertices()[i];
                 String line = input2.nextLine();
                 String[] data = line.split(",");
-                vertex.setSize(data.length - 3);
 
-                for (int j = 3; j < data.length; j++) {
-
-                    for (int k = 0; k < size; k++) {
-
-                        if (vertices[k].getCity().getName().equalsIgnoreCase(data[j].trim())) {
-                            vertex.addAdjacentVertex(vertices[k]);
-                            break;
-                        }
-
-                    }
-
-                }
-
-                pakistan.addVertex(vertex);
+                for (int j = 3; j < data.length; j++)
+                    pakistan.addEdge(vertex.getCity().getName(), data[j].trim());
 
             }
 
@@ -94,10 +86,18 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             System.out.println("File not found!");
         }
 
-        File file = new File("./src/pakgeojson.wkt");
-        String data;
+    }
 
-        regions = new Polygon[8];
+    /**
+     * constructs the regions from the data file
+     */
+    private void constructRegions() {
+
+        File file = new File("./src/pakgeojson.wkt");
+        int size = 8;
+
+        regions = new Polygon[size];
+        String data;
 
         try {
             Scanner input = new Scanner(file);
@@ -124,9 +124,11 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             }
 
             input.close();
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+
 
     }
 
@@ -247,6 +249,10 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
+    /**
+     * draws the edges of the graph (roads)
+     * @param g is the graphics
+     */
     private void drawRoads(Graphics g) {
 
         for (Vertex v1 : pakistan.getVertices()) {
@@ -257,6 +263,13 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
+    /**
+     * draws a line between two cities
+     * @param g is the graphics
+     * @param c1 is the first city
+     * @param c2 is the second city
+     * @param color is the color of the line
+     */
     private void drawLine(Graphics g, City c1, City c2, Color color){
 
         if (c1 == null || c2 == null)
@@ -291,6 +304,10 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
+    /**
+     * draws the complete shortest path between the source and destination city
+     * @param g is the graphics
+     */
     private void drawPath(Graphics g) {
 
         if (fromVertex == null || toVertex == null || path == null) {
@@ -306,6 +323,10 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
+    /**
+     * writes the sub-paths along with their distances on the right
+     * @param g is the graphics
+     */
     private void writePathDetails(Graphics g) {
 
         g.setColor(Color.white);
@@ -336,7 +357,6 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             }
             fromVertex = null;
             toVertex = null;
-            calculated = false;
         }
 
         // setting the source city as the one pressed (if any)

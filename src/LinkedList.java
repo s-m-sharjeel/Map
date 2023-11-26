@@ -11,6 +11,26 @@ public class LinkedList<T extends Comparable<T>> {
         size = 0;
     }
 
+    public T pop() {
+
+        if (isEmpty())
+            return null;
+
+        T temp = head.data;
+        head = head.next;
+        return temp;
+
+    }
+
+    public T peek() {
+
+        if (isEmpty())
+            return null;
+
+        return head.data;
+
+    }
+
     public LinkedList(LinkedList<T> list) {
 
         if (list.isEmpty())

@@ -4,7 +4,6 @@ public class Vertex implements Comparable<Vertex> {
     private Float shortestDistance;
     private LinkedList<Vertex> shortestPath;
     private Vertex[] adjacentVertices;
-//    private final LinkedList<Vertex> adjacentVertices;
     private int vertexCount;
 
 
@@ -12,7 +11,6 @@ public class Vertex implements Comparable<Vertex> {
         this.city = city;
         shortestDistance = Float.MAX_VALUE;
         shortestPath = new LinkedList<>();
-//        adjacentVertices = new LinkedList<>();
         vertexCount = 0;
     }
 

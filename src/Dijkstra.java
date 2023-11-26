@@ -20,7 +20,7 @@ public class Dijkstra {
                 }
             }
             // order doesn't matter, so insertion in constant time is preferred
-            settledVertices.addFirst(currentVertex);
+            settledVertices.add(currentVertex);
         }
     }
 
