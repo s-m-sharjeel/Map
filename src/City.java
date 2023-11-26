@@ -5,19 +5,14 @@ public class City{
     private final String name;
     private final float lat;
     private final float lng;
-    private final int x;
-    private final int y;
-    private final int size = 4;
-    private final Color color = Color.white;
-    private boolean pressed;
-    private boolean hovered;
+
+    private Button button;
 
     public City(String name, float lat, float lng) {
         this.name = name;
         this.lat = lat;
         this.lng = lng;
-        this.x = Map.getXFromLNG(lng);
-        this.y = Map.getYFromLAT(lat);
+        this.button = new Button(Map.getXFromLNG(lng), Map.getYFromLAT(lat));
     }
 
     /**
@@ -25,25 +20,7 @@ public class City{
      * @param g is the graphics
      */
     public void draw(Graphics g){
-
-        Graphics2D g2 = (Graphics2D) g;
-
-        g2.setColor(color);
-        g2.setStroke(new BasicStroke(2));
-        g2.drawOval(x - size, y - size, size*2, size*2);
-
-        if (hovered) {
-            g2.setColor(new Color(121, 190, 88));
-            g2.fillOval(x - size, y - size, size*2, size*2);
-            displayName(g);
-        }
-
-        if (pressed) {
-            g2.setColor(new Color(0, 64, 26));
-            g2.fillOval(x - size, y - size, size*2, size*2);
-        }
-
-        g2.setStroke(new BasicStroke(1));
+        button.draw(name, g);
     }
 
     /**
@@ -52,60 +29,22 @@ public class City{
      * @param y is the vertical component of the click
      */
     public void isClicked(int x, int y){
-
-        // euclidean distance
-        if ((x - this.x)*(x - this.x) + (y - this.y)*(y - this.y) < size*size)
-            pressed = true;
-
+        button.isClicked(x, y);
     }
 
     /**
      * changes the state to hovered if clicked within the bounds of the button
-     * @param x is the horizontal component of the click
-     * @param y is the vertical component of the click
+     * @param x is the horizontal component of the hover
+     * @param y is the vertical component of the hover
      */
     public void isHovered(int x, int y){
-
-        // euclidean distance
-        hovered = (x - this.x) * (x - this.x) + (y - this.y) * (y - this.y) < size * size;
-
-    }
-
-    /**
-     * displays the name of the city on top of its marker
-     * @param g is the graphics
-     */
-    private void displayName(Graphics g){
-
-        g.setColor(Color.black);
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 8));
-        FontMetrics m = g.getFontMetrics();
-        int stringWidth = m.stringWidth(name);
-        int stringHeight = m.getAscent() - m.getDescent();
-
-//        g.setColor(Color.white);
-//        g.fillRect(x - (stringWidth + 6), y - (stringHeight + 6), stringWidth + 6, stringHeight + 6);
-//
-//        g.setColor(Color.black);
-//        g.drawRect(x - (stringWidth + 6), y - (stringHeight + 6), stringWidth + 6, stringHeight + 6);
-
-        g.setColor(Color.black);
-        g.drawString(name, x - (stringWidth/2), y - stringHeight/2 - size/2 - 1);
-
+        button.isHovered(x, y);
     }
 
     // getter/setter:
 
     public String getName() {
         return name;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public double getLat() {
@@ -116,12 +55,20 @@ public class City{
         return lng;
     }
 
+    public int getX() {
+        return button.getX();
+    }
+
     public boolean isPressed() {
-        return pressed;
+        return button.isPressed();
     }
 
     public void setPressed(boolean pressed) {
-        this.pressed = pressed;
+        button.setPressed(pressed);
+    }
+
+    public int getY() {
+        return button.getY();
     }
 
     @Override

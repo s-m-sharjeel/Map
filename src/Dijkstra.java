@@ -4,7 +4,7 @@ public class Dijkstra {
      * finds the shortest path from a vertex to all the other vertices in the graph using BFS
      * @param source is the source vertex
      */
-    public static void calculateShortestPath(Vertex source) {
+    private static void calculateShortestPath(Vertex source) {
 
         source.setShortestDistance((float) 0);
         LinkedList<Vertex> settledVertices = new LinkedList<>();
@@ -20,7 +20,7 @@ public class Dijkstra {
                 }
             }
             // order doesn't matter, so insertion in constant time is preferred
-            settledVertices.addFirst(currentVertex);
+            settledVertices.add(currentVertex);
         }
     }
 
