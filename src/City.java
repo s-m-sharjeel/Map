@@ -6,7 +6,7 @@ public class City{
     private final float lat;
     private final float lng;
 
-    private Button button;
+    private final Button button;
 
     public City(String name, float lat, float lng) {
         this.name = name;

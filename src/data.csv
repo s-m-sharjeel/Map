@@ -1,7 +1,7 @@
 City,lat,lng,neighbouring cities
-Badin,24.6558,68.8383,Karachi
-Thatta,24.7461,67.9243,Karachi, Hyderabad
-Karachi,24.86,67.01,Hyderabad, Thatta, Badin, Lasbela
+Badin,24.6558,68.8383,Thatta
+Thatta,24.7461,67.9243,Karachi, Hyderabad, Badin
+Karachi,24.86,67.01,Hyderabad, Thatta, Lasbela
 Gwadar,25.1264,62.3225, Turbat, Pasni
 Pasni,25.2510,63.4154, Gwadar, Turbat, Ormara
 Ormara,25.2666,64.6096, Pasni, Lasbela

@@ -20,7 +20,7 @@ public class Dijkstra {
                 }
             }
             // order doesn't matter, so insertion in constant time is preferred
-            settledVertices.add(currentVertex);
+            settledVertices.addLast(currentVertex);
         }
     }
 
@@ -44,7 +44,7 @@ public class Dijkstra {
 //                list.add(linkedList.get(i));
 
             // adding the source vertex to its own shortest path list
-            list.add(sourceVertex);
+            list.addLast(sourceVertex);
             adjacentVertex.setShortestPath(list);
         }
     }
@@ -56,7 +56,7 @@ public class Dijkstra {
      */
     private static LinkedList<Vertex> getPath(Vertex destination) {
         LinkedList<Vertex> paths = destination.getShortestPath();
-        paths.add(destination);
+        paths.addLast(destination);
         return paths;
     }
 

@@ -1,0 +1,8 @@
+City,lat,lng,neighbouring cities
+Badin,24.6558,68.8383, Thatta
+Thatta,24.7461,67.9243,Karachi, Badin
+Karachi,24.86,67.01,Hyderabad, Thatta, Lasbela
+Hyderabad,25.3792,68.3683, Karachi, Tando Allahyar
+Tando Allahyar,25.4667,68.7167,Hyderabad
+Lasbela,25.87,66.7129, Karachi, Khuzdar
+Khuzdar,27.8,66.6167, Lasbela

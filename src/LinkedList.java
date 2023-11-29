@@ -5,30 +5,11 @@
 public class LinkedList<T extends Comparable<T>> {
 
     private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     public LinkedList() {
         size = 0;
-    }
-
-    public T pop() {
-
-        if (isEmpty())
-            return null;
-
-        T temp = head.data;
-        head = head.next;
-        return temp;
-
-    }
-
-    public T peek() {
-
-        if (isEmpty())
-            return null;
-
-        return head.data;
-
     }
 
     public LinkedList(LinkedList<T> list) {
@@ -48,29 +29,27 @@ public class LinkedList<T extends Comparable<T>> {
             current2 = current2.next;
         }
 
+        this.tail = current2;
+
     }
 
     /**
      * insertion at the end of the list
      * @param data is the data to be inserted
      */
-    public void add(T data) {
+    public void addLast(T data) {
 
         Node<T> newNode = new Node<T>(data);
         size++;
 
         if (isEmpty()) {
             head = newNode;
+            tail = newNode;
             return;
         }
 
-        Node<T> current = head;
-
-        while (current.next != null) {
-            current = current.next;
-        }
-
-        current.next = newNode;
+        tail.next = newNode;
+        tail = newNode;
 
     }
 
@@ -85,6 +64,7 @@ public class LinkedList<T extends Comparable<T>> {
 
         if (isEmpty()) {
             head = newNode;
+            tail = newNode;
             return;
         }
 

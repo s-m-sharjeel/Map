@@ -1,6 +1,6 @@
 public class Graph{
 
-    int vertexCount;
+    private int vertexCount;
     private final Vertex[] vertices;    // adjacency list
 
     public Graph(int size) {

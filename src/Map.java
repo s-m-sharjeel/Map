@@ -21,17 +21,22 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private final Color light_green = new Color(121, 190, 88);
     private LinkedList<Vertex> path;
 
+    private Image pointer;
+
     public Map() {
         initMap();
     }
 
     /**
-     * initializes the cities by reading the file
+     * initializes the entire map, including cities and boundaries
      */
     private void InitializeAssets() {
 
         constructGraph();
         constructRegions();
+
+        ImageIcon icon = new ImageIcon("./src/location.png");
+        pointer = icon.getImage();
 
     }
 
@@ -83,7 +88,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             input2.close();
 
         } catch (Exception e){
-            System.out.println("File not found!");
+            throw new RuntimeException(e);
         }
 
     }
@@ -162,13 +167,16 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     @Override
     public void paintComponent(Graphics g) {
+
         super.paintComponent(g);
+
         setBackground(dark_green);
 
         drawBoundary(g);
-        drawRoads(g);
+//        drawRoads(g);
         drawPath(g);
         drawCities(g);
+        drawPointers(g);
         paintText(g);
 
     }
@@ -226,12 +234,34 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         g2.setColor(Color.black);
         g2.setStroke(new BasicStroke(2));
 
-        for (Polygon region : regions) {
-            g.setColor(light_green);
-            g.fillPolygon(region);
-            g.setColor(Color.black);
-            g.drawPolygon(region);
-        }
+        g.setColor(Color.blue);
+        g.fillPolygon(regions[0]);
+
+        g.setColor(Color.yellow);
+        g.fillPolygon(regions[1]);
+
+        g.setColor(Color.magenta);
+        g.fillPolygon(regions[2]);
+
+        g.setColor(Color.cyan);
+        g.fillPolygon(regions[3]);
+
+        g.setColor(Color.orange);
+        g.fillPolygon(regions[4]);
+
+        g.setColor(Color.pink);
+        g.fillPolygon(regions[5]);
+
+        g.setColor(Color.green);
+        g.fillPolygon(regions[6]);
+
+        g.setColor(Color.red);
+        g.fillPolygon(regions[7]);
+//
+//        for (Polygon region : regions) {
+//            g.setColor(Color.black);
+//            g.drawPolygon(region);
+//        }
 
         g2.setStroke(new BasicStroke(1));
 
@@ -243,9 +273,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      */
     private void drawCities(Graphics g) {
 
-        for (Vertex v : pakistan.getVertices()) {
+        for (Vertex v : pakistan.getVertices())
             v.getCity().draw(g);
-        }
 
     }
 
@@ -257,7 +286,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         for (Vertex v1 : pakistan.getVertices()) {
             for (Vertex v2: v1.getAdjacentVertices()) {
-                drawLine(g, v1.getCity(), v2.getCity(), Color.black);
+                drawLine(g, v1.getCity(), v2.getCity(), Color.white);
             }
         }
 
@@ -298,6 +327,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
             for (Vertex vertex : pakistan.getVertices())
                 vertex.resetNode();
+
             path = Dijkstra.getShortestPath(fromVertex, toVertex);
 
         }
@@ -315,11 +345,20 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             return;
         }
 
-        g.setColor(Color.white);
         for (int i = 0; i < path.size() - 1; i++)
-            drawLine(g, path.get(i).getCity(), path.get(i + 1).getCity(), Color.white);
+            drawLine(g, path.get(i).getCity(), path.get(i + 1).getCity(), Color.red);
 
         writePathDetails(g);
+
+    }
+
+    private void drawPointers(Graphics g) {
+
+        if (fromVertex != null)
+            g.drawImage(pointer, fromVertex.getCity().getX() - pointer.getWidth(this)/2, fromVertex.getCity().getY() - pointer.getHeight(this), this);
+
+        if (toVertex != null)
+            g.drawImage(pointer, toVertex.getCity().getX() - pointer.getWidth(this)/2, toVertex.getCity().getY() - pointer.getHeight(this), this);
 
     }
 
@@ -446,12 +485,15 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * calculates the distance between two cities
+     * calculates the distance between two cities assuming we reside on the equator
+     * <a href="https://www.thoughtco.com/degree-of-latitude-and-longitude-distance-4070616">...</a>
      * @param c1 is the city1
      * @param c2 is the city2
      * @return the distance in kms
      */
     public static float getDistance(City c1, City c2) {
+
+        // https://www.thoughtco.com/degree-of-latitude-and-longitude-distance-4070616
 
         double lng = (Math.abs(c1.getLng() - c2.getLng())*111.321);
         double lat = (Math.abs(c1.getLat() - c2.getLat())*68.703);
