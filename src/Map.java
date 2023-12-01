@@ -29,6 +29,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     /**
      * initializes the entire map, including cities and boundaries
+     * O(E * V), where V and E are total number of vertices and edges respectively
      */
     private void InitializeAssets() {
 
@@ -42,6 +43,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     /**
      * constructs the graph from the data file
+     * O(E * V), where V and E are total number of vertices and edges respectively
      */
     private void constructGraph() {
 
@@ -54,6 +56,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             File file = new File("./src/data.csv");
             Scanner input1 = new Scanner(file);
             input1.nextLine();
+
+            // O(V)
 
             for (int i = 0; i < size; i++) {
 
@@ -70,7 +74,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             Scanner input2 = new Scanner(file);
             input2.nextLine();
 
-            // for each city
+            // O(E), where E is the total number of edges
+
             for (int i = 0; i < size; i++) {
 
                 Vertex vertex = pakistan.getVertices()[i];
@@ -78,7 +83,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
                 String[] data = line.split(",");
 
                 for (int j = 3; j < data.length; j++)
-                    pakistan.addEdge(vertex.getCity().getName(), data[j].trim());
+                    pakistan.addEdge(vertex.getCity().getName(), data[j].trim());   // O(V)
 
             }
 
@@ -92,6 +97,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     /**
      * constructs the regions from the data file
+     * O(n), where n is the total number of coordinates
      */
     private void constructRegions() {
 
@@ -136,6 +142,9 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
+    /**
+     * O(E * V), where V and E are total number of vertices and edges respectively
+     */
     private void initMap() {
 
         /*
@@ -164,6 +173,10 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         timer.start();
     }
 
+    /**
+     * repaints the panel | O(V)
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     public void paintComponent(Graphics g) {
 
@@ -181,7 +194,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * paints text on the panel
+     * paints text on the panel | O(1)
      * @param g is the graphics
      */
     private void paintText(Graphics g) {
@@ -226,7 +239,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * draws the boundary of pakistan and the regions with a separate color for each
+     * draws the boundary of pakistan and the regions with a separate color for each | O(1)
      * @param g is the graphics
      */
     private void drawBoundary(Graphics g) {
@@ -264,7 +277,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * draws all the cities
+     * draws all the cities | O(V)
      * @param g is the graphics
      */
     private void drawCities(Graphics g) {
@@ -275,7 +288,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * draws the edges of the graph (roads)
+     * draws the edges of the graph (roads) | O(E)
      * @param g is the graphics
      */
     private void drawRoads(Graphics g) {
@@ -289,7 +302,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * draws a line between two cities
+     * draws a line between two cities | O(1)
      * @param g is the graphics
      * @param c1 is the first city
      * @param c2 is the second city
@@ -316,6 +329,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     /**
      * finds the shortest path between the source and destination city
+     * O(E * logV), where V and E are the total number of vertices and edges respectively
      */
     private void getPath() {
 
@@ -331,7 +345,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * draws the complete shortest path between the source and destination city
+     * draws the complete shortest path between the source and destination city | O(n)
      * @param g is the graphics
      */
     private void drawPath(Graphics g) {
@@ -339,13 +353,43 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         if (fromVertex == null || toVertex == null || path == null)
             return;
 
-        for (int i = 0; i < path.size() - 1; i++)
-            drawLine(g, path.get(i).getCity(), path.get(i + 1).getCity(), Color.red);
+        Node<Vertex> current = path.head;
+
+        while (current != null && current.next != null) {
+            drawLine(g, current.data.getCity(), current.next.data.getCity(), Color.red);
+            current = current.next;
+        }
 
         writePathDetails(g);
 
     }
 
+    /**
+     * writes the sub-paths along with their distances on the right | O(n)
+     * @param g is the graphics
+     */
+    private void writePathDetails(Graphics g) {
+
+        g.setColor(Color.white);
+
+        Node<Vertex> current = path.head;
+
+        int i = 0;
+        while (current != null && current.next != null) {
+            City c1 = current.data.getCity();
+            City c2 = current.next.data.getCity();
+            String str = c1.getName() + " -> " + c2.getName() + " | " + getDistance(c1, c2) + " km";
+            g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 300 + 30*i);
+            current = current.next;
+            i++;
+        }
+
+    }
+
+    /**
+     * draws the location markers | O(1)
+     * @param g is the graphics
+     */
     private void drawPointers(Graphics g) {
 
         if (fromVertex != null)
@@ -353,23 +397,6 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         if (toVertex != null)
             g.drawImage(pointer, toVertex.getCity().getX() - pointer.getWidth(this)/2, toVertex.getCity().getY() - pointer.getHeight(this), this);
-
-    }
-
-    /**
-     * writes the sub-paths along with their distances on the right
-     * @param g is the graphics
-     */
-    private void writePathDetails(Graphics g) {
-
-        g.setColor(Color.white);
-        for (int i = 0; i < path.size() - 1; i++) {
-            City c1 = path.get(i).getCity();
-            City c2 = path.get(i + 1).getCity();
-            String str = c1.getName() + " -> " + c2.getName() + " | " + getDistance(c1, c2) + " km";
-            g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 300 + 30*i);
-        }
-
 
     }
 

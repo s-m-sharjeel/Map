@@ -4,9 +4,9 @@
  */
 public class LinkedList<T extends Comparable<T>> {
 
-    private Node<T> head;
-    private Node<T> tail;
-    private int size;
+    Node<T> head;
+    Node<T> tail;
+    int size;
 
     public LinkedList() {
         size = 0;

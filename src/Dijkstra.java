@@ -8,7 +8,7 @@ public class Dijkstra {
     private static void calculateShortestPath(Vertex source) {
 
         source.setShortestDistance((float) 0);  // O(1)
-        MinHeapTree<Vertex> unsettledVertices = new MinHeapTree<>(73);
+        MinHeapTree<Vertex> unsettledVertices = new MinHeapTree<>(270);
         unsettledVertices.insert(source);
         while (!unsettledVertices.isEmpty()) {  // O(V)
             Vertex currentVertex = unsettledVertices.extractMin(); // O(1)
