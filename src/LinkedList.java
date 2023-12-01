@@ -12,6 +12,10 @@ public class LinkedList<T extends Comparable<T>> {
         size = 0;
     }
 
+    /**
+     * deep copies another list | O(n)
+     * @param list is the other list
+     */
     public LinkedList(LinkedList<T> list) {
 
         if (list.isEmpty())
@@ -34,12 +38,12 @@ public class LinkedList<T extends Comparable<T>> {
     }
 
     /**
-     * insertion at the end of the list
+     * insertion at the end of the list | O(1)
      * @param data is the data to be inserted
      */
     public void addLast(T data) {
 
-        Node<T> newNode = new Node<T>(data);
+        Node<T> newNode = new Node<>(data);
         size++;
 
         if (isEmpty()) {
@@ -54,45 +58,10 @@ public class LinkedList<T extends Comparable<T>> {
     }
 
     /**
-     * insertion at the start of the list
-     * @param data is the data to be inserted
+     * gets an element at the specified index | O(n)
+     * @param i is the index
+     * @return the element
      */
-    public void addFirst(T data) {
-
-        Node<T> newNode = new Node<T>(data);
-        size++;
-
-        if (isEmpty()) {
-            head = newNode;
-            tail = newNode;
-            return;
-        }
-
-        newNode.next = head;
-        head = newNode;
-
-    }
-
-    public boolean contains(T data) {
-
-        if (isEmpty())
-            return false;
-
-        Node<T> current = head;
-
-        while (current != null) {
-
-            if (current.data.equals(data))
-                return true;
-
-            current = current.next;
-
-        }
-
-        return false;
-
-    }
-
     public T get(int i) {
 
         if (i >= size)
@@ -112,27 +81,22 @@ public class LinkedList<T extends Comparable<T>> {
 
     }
 
+    /**
+     * empty status of the list | O(1)
+     * @return true if empty
+     */
     private boolean isEmpty() {
 
         return head == null;
 
     }
 
+    /**
+     * the number of elements in a list | O(1)
+     * @return the size of the list
+     */
     public int size() {
         return size;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder("[ ");
-
-        Node<T> current = head;
-
-        while (current != null) {
-            s.append(current.data).append(" ");
-            current = current.next;
-        }
-
-        return s + "]";
-    }
 }

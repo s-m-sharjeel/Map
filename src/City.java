@@ -16,7 +16,7 @@ public class City{
     }
 
     /**
-     * draws the city on the map
+     * draws the city on the map | O(1)
      * @param g is the graphics
      */
     public void draw(Graphics g){
@@ -24,7 +24,7 @@ public class City{
     }
 
     /**
-     * changes the state to pressed if clicked within the bounds of the button
+     * changes the state to pressed if clicked within the bounds of the button | O(1)
      * @param x is the horizontal component of the click
      * @param y is the vertical component of the click
      */
@@ -33,7 +33,7 @@ public class City{
     }
 
     /**
-     * changes the state to hovered if clicked within the bounds of the button
+     * changes the state to hovered if clicked within the bounds of the button | O(1)
      * @param x is the horizontal component of the hover
      * @param y is the vertical component of the hover
      */

@@ -3,15 +3,25 @@ public class Vertex implements Comparable<Vertex> {
     private final City city;
     private Float shortestDistance;
     private LinkedList<Vertex> shortestPath;
+    private boolean visited;
     private Vertex[] adjacentVertices;
     private int vertexCount;
 
 
     public Vertex(City city) {
         this.city = city;
+        visited = false;
         shortestDistance = Float.MAX_VALUE;
         shortestPath = new LinkedList<>();
         vertexCount = 0;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
+    public boolean isVisited() {
+        return visited;
     }
 
     public void setSize(int size) {
@@ -52,7 +62,8 @@ public class Vertex implements Comparable<Vertex> {
         return shortestPath;
     }
 
-    public void resetNode() {
+    public void resetVertex() {
+        visited = false;
         shortestDistance = Float.MAX_VALUE;
         shortestPath = new LinkedList<>();
     }

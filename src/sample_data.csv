@@ -1,4 +1,4 @@
-City,lat,lng,neighbouring cities
+City,Lat,Lng,Neighbouring Cities
 Badin,24.6558,68.8383, Thatta
 Thatta,24.7461,67.9243,Karachi, Badin
 Karachi,24.86,67.01,Hyderabad, Thatta, Lasbela

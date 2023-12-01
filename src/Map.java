@@ -53,15 +53,13 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
             File file = new File("./src/data.csv");
             Scanner input1 = new Scanner(file);
-
             input1.nextLine();
 
             for (int i = 0; i < size; i++) {
+
                 String line = input1.nextLine();
                 String[] data = line.split(",");
-
                 City city = (new City(data[0], Float.parseFloat(data[1]), Float.parseFloat(data[2])));
-
                 Vertex vertex = new Vertex(city);
                 vertex.setSize(data.length - 3);
                 pakistan.addVertex(vertex);
@@ -70,7 +68,6 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             input1.close();
 
             Scanner input2 = new Scanner(file);
-
             input2.nextLine();
 
             // for each city
@@ -87,8 +84,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
             input2.close();
 
-        } catch (Exception e){
-            throw new RuntimeException(e);
+        } catch (FileNotFoundException e){
+            System.out.println("File not found!");
         }
 
     }
@@ -99,13 +96,15 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private void constructRegions() {
 
         File file = new File("./src/pakgeojson.wkt");
-        int size = 8;
 
+        int size = 8;
         regions = new Polygon[size];
         String data;
 
         try {
+
             Scanner input = new Scanner(file);
+
             for (int i = 0; i < regions.length; i++) {
                 input.next();
                 data = input.nextLine();
@@ -131,7 +130,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             input.close();
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            System.out.println("File not found!");
         }
 
 
@@ -190,6 +189,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         String font_style = Font.SERIF;
         Color font_color = Color.white;
         Color shadow = Color.black;
+
+        // for shadow effect
         int gap = 4;
 
         g.setFont(new Font(font_style, Font.BOLD, 40));
@@ -225,7 +226,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * draws the boundary of pakistan
+     * draws the boundary of pakistan and the regions with a separate color for each
      * @param g is the graphics
      */
     private void drawBoundary(Graphics g) {
@@ -234,7 +235,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         g2.setColor(Color.black);
         g2.setStroke(new BasicStroke(2));
 
-        g.setColor(Color.blue);
+        g.setColor(new Color(0, 100, 255));
         g.fillPolygon(regions[0]);
 
         g.setColor(Color.yellow);
@@ -252,16 +253,11 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         g.setColor(Color.pink);
         g.fillPolygon(regions[5]);
 
-        g.setColor(Color.green);
+        g.setColor(light_green);
         g.fillPolygon(regions[6]);
 
-        g.setColor(Color.red);
+        g.setColor(new Color(255, 100, 100));
         g.fillPolygon(regions[7]);
-//
-//        for (Polygon region : regions) {
-//            g.setColor(Color.black);
-//            g.drawPolygon(region);
-//        }
 
         g2.setStroke(new BasicStroke(1));
 
@@ -326,7 +322,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         if (fromVertex != null && toVertex != null) {
 
             for (Vertex vertex : pakistan.getVertices())
-                vertex.resetNode();
+                vertex.resetVertex();
 
             path = Dijkstra.getShortestPath(fromVertex, toVertex);
 
@@ -340,10 +336,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      */
     private void drawPath(Graphics g) {
 
-        if (fromVertex == null || toVertex == null || path == null) {
-            path = null;
+        if (fromVertex == null || toVertex == null || path == null)
             return;
-        }
 
         for (int i = 0; i < path.size() - 1; i++)
             drawLine(g, path.get(i).getCity(), path.get(i + 1).getCity(), Color.red);
@@ -396,6 +390,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             }
             fromVertex = null;
             toVertex = null;
+            path = null;
         }
 
         // setting the source city as the one pressed (if any)

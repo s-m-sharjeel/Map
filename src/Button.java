@@ -1,6 +1,4 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.image.ImageObserver;
 
 public class Button {
 
@@ -17,7 +15,7 @@ public class Button {
     }
 
     /**
-     * draws the city on the map
+     * draws the city on the map | O(1)
      * @param g is the graphics
      */
     public void draw(String name, Graphics g){
@@ -37,13 +35,14 @@ public class Button {
         if (pressed) {
             g2.setColor(new Color(0, 64, 26));
             g2.fillOval(x - size, y - size, size*2, size*2);
+            displayName(name, g);
         }
 
         g2.setStroke(new BasicStroke(1));
     }
 
     /**
-     * changes the state to pressed if clicked within the bounds of the button
+     * changes the state to pressed if clicked within the bounds of the button | O(1)
      * @param x is the horizontal component of the click
      * @param y is the vertical component of the click
      */
@@ -56,7 +55,7 @@ public class Button {
     }
 
     /**
-     * changes the state to hovered if clicked within the bounds of the button
+     * changes the state to hovered if clicked within the bounds of the button | O(1)
      * @param x is the horizontal component of the click
      * @param y is the vertical component of the click
      */
@@ -68,7 +67,7 @@ public class Button {
     }
 
     /**
-     * displays the name of the city on top of its marker
+     * displays the name of the city on top of its marker | O(1)
      * @param g is the graphics
      */
     private void displayName(String name, Graphics g){

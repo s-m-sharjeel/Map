@@ -2,55 +2,50 @@ public class Dijkstra {
 
     /**
      * finds the shortest path from a vertex to all the other vertices in the graph using BFS
+     * let V and E be the total number of vertices and edges respectively, then: O(E*logV)
      * @param source is the source vertex
      */
     private static void calculateShortestPath(Vertex source) {
 
-        source.setShortestDistance((float) 0);
-        LinkedList<Vertex> settledVertices = new LinkedList<>();
-        PriorityQueue<Vertex> unsettledVertices = new PriorityQueue<>();
-        unsettledVertices.enqueue(source);  // O(n), because it is sorted at the time of enqueuing in a priority list
-        while (!unsettledVertices.isEmpty()) {
-            Vertex currentVertex = unsettledVertices.dequeue(); // O(1)
-            for (int i = 0; i < currentVertex.getAdjacentVertices().length; i++) {  // O(n)
+        source.setShortestDistance((float) 0);  // O(1)
+        MinHeapTree<Vertex> unsettledVertices = new MinHeapTree<>(73);
+        unsettledVertices.insert(source);
+        while (!unsettledVertices.isEmpty()) {  // O(V)
+            Vertex currentVertex = unsettledVertices.extractMin(); // O(1)
+            for (int i = 0; i < currentVertex.getAdjacentVertices().length; i++) {
                 Vertex adjacentVertex = currentVertex.getAdjacentVertices()[i]; // O(1) because of the use of array (random access)
-                if (!settledVertices.contains(adjacentVertex)) {
-                    evaluateDistanceAndPath(adjacentVertex, Map.getDistance(adjacentVertex.getCity(), currentVertex.getCity()), currentVertex);
-                    unsettledVertices.enqueue(adjacentVertex);  // enqueueing the adjacent nodes of the current node in constant time
+                if (!(adjacentVertex.isVisited())) {
+                    evaluateDistanceAndPath(adjacentVertex, currentVertex); // O(1)
+                    unsettledVertices.insert(adjacentVertex);  // enqueueing the adjacent nodes of the current node in O(logV)
                 }
             }
-            // order doesn't matter, so insertion in constant time is preferred
-            settledVertices.addLast(currentVertex);
+            currentVertex.setVisited(true);
         }
     }
 
     /**
-     * updates the distance of the vertex if it is less than the one previously set
+     * updates the distance of the vertex if it is less than the one previously set | O(1)
      * @param sourceVertex is the source vertex
      * @param adjacentVertex is the destination vertex
-     * @param edgeWeight is the distance between them
      */
-    private static void evaluateDistanceAndPath(Vertex adjacentVertex, Float edgeWeight, Vertex sourceVertex) {
+    private static void evaluateDistanceAndPath(Vertex adjacentVertex, Vertex sourceVertex) {
 
         // calculates the new distance from the absolute source
-        Float newDistance = sourceVertex.getShortestDistance() + edgeWeight;
+        Float newDistance = sourceVertex.getShortestDistance() + Map.getDistance(adjacentVertex.getCity(), sourceVertex.getCity());
+
         if (newDistance < adjacentVertex.getShortestDistance()) {
+
             adjacentVertex.setShortestDistance(newDistance);
-            LinkedList<Vertex> linkedList = sourceVertex.getShortestPath();
-            LinkedList<Vertex> list = new LinkedList<>(linkedList);
-
-//            // deep copying elements from list
-//            for (int i = 0; i < linkedList.size(); i++)
-//                list.add(linkedList.get(i));
-
-            // adding the source vertex to its own shortest path list
-            list.addLast(sourceVertex);
+            LinkedList<Vertex> sourceVertexShortestPath = sourceVertex.getShortestPath();
+            LinkedList<Vertex> list = new LinkedList<>(sourceVertexShortestPath);
+            list.addLast(sourceVertex); // adding the source vertex to its own shortest path list in O(1)
             adjacentVertex.setShortestPath(list);
+
         }
     }
 
     /**
-     * gets the shortest path of the destination vertex from the source vertex
+     * gets the shortest path of the destination vertex from the source vertex | O(1)
      * @param destination is the destination vertex
      * @return the shortest path
      */
@@ -61,7 +56,7 @@ public class Dijkstra {
     }
 
     /**
-     * gets the shortest path from the source to the destination
+     * gets the shortest path from the source to the destination | O(E*logV)
      * @param from is the source vertex
      * @param to is the destination vertex
      * @return the shortest path

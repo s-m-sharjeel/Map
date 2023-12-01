@@ -9,7 +9,7 @@ public class Graph{
     }
 
     /**
-     * adds a vertex to the adjacency list
+     * adds a vertex to the adjacency list | O(1)
      * @param vertex is the vertex to be added
      */
     public void addVertex(Vertex vertex){
@@ -19,6 +19,11 @@ public class Graph{
         vertices[vertexCount++] = vertex;
     }
 
+    /**
+     * adds an edge to the graph | O(V)
+     * @param s1 is the name of the source city
+     * @param s2 is the name of the destination city
+     */
     public void addEdge(String s1, String s2) {
 
         Vertex from = null;
@@ -49,13 +54,17 @@ public class Graph{
     }
 
     /**
-     * checks if adjacency list is full
+     * checks if adjacency list is full | O(1)
      * @return true if full, otherwise return false
      */
     private boolean isFull() {
         return vertexCount == vertices.length;
     }
 
+    /**
+     * gets an array of the vertices | O(1)
+     * @return an array of all the vertices
+     */
     public Vertex[] getVertices() {
         return vertices;
     }
