@@ -239,7 +239,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * draws the boundary of pakistan and the regions with a separate color for each | O(1)
+     * draws the boundary of pakistan and the regions with a separate color for each | O(n)
      * @param g is the graphics
      */
     private void drawBoundary(Graphics g) {
@@ -283,7 +283,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private void drawCities(Graphics g) {
 
         for (Vertex v : pakistan.getVertices())
-            v.getCity().draw(g);
+            v.getCity().getButton().draw(g);
 
     }
 
@@ -313,10 +313,10 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         if (c1 == null || c2 == null)
             return;
 
-        int fromX = c1.getX();
-        int fromY = c1.getY();
-        int toX = c2.getX();
-        int toY = c2.getY();
+        int fromX = c1.getButton().getX();
+        int fromY = c1.getButton().getY();
+        int toX = c2.getButton().getX();
+        int toY = c2.getButton().getY();
 
         Graphics2D g2 = (Graphics2D) g;
 
@@ -393,10 +393,10 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private void drawPointers(Graphics g) {
 
         if (fromVertex != null)
-            g.drawImage(pointer, fromVertex.getCity().getX() - pointer.getWidth(this)/2, fromVertex.getCity().getY() - pointer.getHeight(this), this);
+            g.drawImage(pointer, fromVertex.getCity().getButton().getX(), getX() - pointer.getWidth(this)/2, fromVertex.getCity().getButton().getY(), getY() - pointer.getHeight(this), this);
 
         if (toVertex != null)
-            g.drawImage(pointer, toVertex.getCity().getX() - pointer.getWidth(this)/2, toVertex.getCity().getY() - pointer.getHeight(this), this);
+            g.drawImage(pointer, toVertex.getCity().getButton().getX(), getX() - pointer.getWidth(this)/2, toVertex.getCity().getButton().getY(), getY() - pointer.getHeight(this), this);
 
     }
 
@@ -413,7 +413,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         // resetting if none of the cities has been selected
         if (fromVertex != null && toVertex != null){
             for (Vertex v : pakistan.getVertices()) {
-                v.getCity().setPressed(false);
+                v.getCity().getButton().setPressed(false);
             }
             fromVertex = null;
             toVertex = null;
@@ -423,8 +423,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         // setting the source city as the one pressed (if any)
         if (fromVertex == null){
             for (Vertex v : pakistan.getVertices()) {
-                v.getCity().isClicked(x, y);
-                if (v.getCity().isPressed()) {
+                v.getCity().getButton().isClicked(x, y);
+                if (v.getCity().getButton().isPressed()) {
                     fromVertex = v;
                     break;
                 }
@@ -434,8 +434,8 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
             // setting the destination
             for (Vertex v : pakistan.getVertices()) {
                 City city = v.getCity();
-                city.isClicked(x, y);
-                if (city.isPressed() && !v.equals(fromVertex)) {
+                city.getButton().isClicked(x, y);
+                if (city.getButton().isPressed() && !v.equals(fromVertex)) {
                     toVertex = v;
                     break;
                 }
@@ -484,7 +484,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         // displays the name of the city when hovered
 
         for (Vertex v : pakistan.getVertices())
-            v.getCity().isHovered(e.getX(), e.getY());
+            v.getCity().getButton().isHovered(e.getX(), e.getY());
 
 	}
 

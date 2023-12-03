@@ -5,6 +5,7 @@ public class MinHeapTree<T extends Comparable<T>> {
 
     public MinHeapTree(int s) {
         heap = (T[])new Comparable[s];
+        size = 0;
     }
 
     public void siftUp(int index) {
@@ -23,10 +24,21 @@ public class MinHeapTree<T extends Comparable<T>> {
 
     }
 
+    public boolean contains(T data) {
+
+        for (int i = 0; i < size; i++) {
+            if (data.equals(heap[i]))
+                return true;
+        }
+
+        return false;
+
+    }
+
     public void insert(T data) {
 
         if (isFull()) {
-            System.out.println("tree is full!");
+            System.out.println("Tree is full!");
             return;
         }
 
@@ -100,4 +112,13 @@ public class MinHeapTree<T extends Comparable<T>> {
 
     }
 
+    @Override
+    public String toString() {
+        String s = "[ ";
+        for (int i = 0; i < size; i++) {
+            s += heap[i] + " ";
+        }
+        s += "]";
+        return s;
+    }
 }

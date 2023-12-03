@@ -3,6 +3,7 @@ public class Vertex implements Comparable<Vertex> {
     private final City city;
     private Float shortestDistance;
     private LinkedList<Vertex> shortestPath;
+    private boolean settled;
     private boolean visited;
     private Vertex[] adjacentVertices;
     private int vertexCount;
@@ -10,7 +11,6 @@ public class Vertex implements Comparable<Vertex> {
 
     public Vertex(City city) {
         this.city = city;
-        visited = false;
         shortestDistance = Float.MAX_VALUE;
         shortestPath = new LinkedList<>();
         vertexCount = 0;
@@ -64,12 +64,21 @@ public class Vertex implements Comparable<Vertex> {
 
     public void resetVertex() {
         visited = false;
+        settled = false;
         shortestDistance = Float.MAX_VALUE;
         shortestPath = new LinkedList<>();
     }
 
+    public boolean isSettled() {
+        return settled;
+    }
+
+    public void setSettled(boolean settled) {
+        this.settled = settled;
+    }
+
     @Override
     public String toString() {
-        return getCity().getName();
+        return city.getName();
     }
 }

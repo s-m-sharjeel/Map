@@ -8,15 +8,18 @@ public class Dijkstra {
     private static void calculateShortestPath(Vertex source) {
 
         source.setShortestDistance((float) 0);  // O(1)
-        MinHeapTree<Vertex> unsettledVertices = new MinHeapTree<>(270);
+        MinHeapTree<Vertex> unsettledVertices = new MinHeapTree<>(73);
         unsettledVertices.insert(source);
         while (!unsettledVertices.isEmpty()) {  // O(V)
             Vertex currentVertex = unsettledVertices.extractMin(); // O(1)
             for (int i = 0; i < currentVertex.getAdjacentVertices().length; i++) {
                 Vertex adjacentVertex = currentVertex.getAdjacentVertices()[i]; // O(1) because of the use of array (random access)
-                if (!(adjacentVertex.isVisited())) {
+                if (!adjacentVertex.isVisited()) {
                     evaluateDistanceAndPath(adjacentVertex, currentVertex); // O(1)
-                    unsettledVertices.insert(adjacentVertex);  // enqueueing the adjacent nodes of the current node in O(logV)
+                    if (!adjacentVertex.isSettled()) {
+                        unsettledVertices.insert(adjacentVertex);  // enqueueing the adjacent nodes of the current node in O(logV)
+                        adjacentVertex.setSettled(true);
+                    }
                 }
             }
             currentVertex.setVisited(true);

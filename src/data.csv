@@ -34,7 +34,7 @@ Dera Ghazi Khan,30.05,70.6333, Rajanpur, Muzaffargarh, Bahawalpur, Dera Ismail K
 Muzaffargarh,30.0703,71.1933,Dera Ghazi Khan, Multan
 Quetta,30.192,67.007,Pashin, Zhob, Kalat, Sibi, Chaman, Noshki
 Multan,30.1978,71.4711,Muzaffargarh, Bahawalpur, Khanewal, Rahim Yar Khan
-Khanewal,30.3017,71.9321,Multan, Bahawalpur, Faisalabad, Toba Tek Singh, Sahiwal
+Khanewal,30.3017,71.9321,Multan, Bahawalpur, Toba Tek Singh, Sahiwal
 Pashin,30.5833,67,Quetta, Zhob, Chaman
 Sahiwal,30.6706,73.1064,Bahawalpur, Khanewal, Okara, Sargodha
 Okara,30.81,73.4597,Lahore, Sahiwal, Faisalabad, Sheikhupura, Jhang
@@ -42,12 +42,12 @@ Chaman,30.921,66.4597, Pashin, Quetta
 Toba Tek Singh,30.9667,72.4833,Faisalabad, Jhang, Khanewal
 Jhang,31.2681,72.3181,Faisalabad, Sargodha, Toba Tek Singh, Okara
 Zhob,31.3417,69.4486,Quetta, Pashin, Dera Ismail Khan
-Faisalabad,31.418,73.079,Lahore, Jhang, Toba Tek Singh, Sargodha, Okara, Khanewal, Hafizabad
+Faisalabad,31.418,73.079,Lahore, Jhang, Toba Tek Singh, Sargodha, Okara, Hafizabad
 Lahore,31.5497,74.3436,Faisalabad, Sheikhupura, Gujranwala, Sargodha, Hafizabad, Okara
 Sheikhupura,31.7083,74,Lahore, Gujranwala, Okara
 Dera Ismail Khan,31.8167,70.9167,Bannu, Zhob, Dera Ghazi Khan, Mianwali
 Hafizabad,32.0709,73.688,Gujranwala, Gujrat, Lahore, Faisalabad
-Sargodha,32.0836,72.6711, Khushab, Faisalabad, Jhang, Gujranwala, Sahiwal, Mandi Bahauddin, Gujrat, Jhelum, Lahore, Chakwal
+Sargodha,32.0836,72.6711, Khushab, Faisalabad, Jhang, Gujranwala, Sahiwal, Mandi Bahauddin, Gujrat, Jhelum, Lahore, Chakwal, Attock
 Gujranwala,32.15,74.1833,Lahore, Sheikhupura, Hafizabad, Sialkot, Gujrat, Mandi Bahauddin, Sargodha
 Khushab,32.2917,72.35,Attock, Jhelum, Sargodha, Mianwali, Chakwal
 Sialkot,32.5,74.5333,Gujranwala, Gujrat

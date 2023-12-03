@@ -58,30 +58,6 @@ public class LinkedList<T extends Comparable<T>> {
     }
 
     /**
-     * gets an element at the specified index | O(n)
-     * @param i is the index
-     * @return the element
-     */
-    public T get(int i) {
-
-        if (i >= size)
-            return null;
-
-        int index = 0;
-        Node<T> current = head;
-
-        while (index < i) {
-
-            current = current.next;
-            index++;
-
-        }
-
-        return current.data;
-
-    }
-
-    /**
      * empty status of the list | O(1)
      * @return true if empty
      */

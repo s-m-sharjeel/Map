@@ -8,17 +8,19 @@ public class Button {
     private final Color color = Color.white;
     private boolean pressed;
     private boolean hovered;
+    private String label;
 
-    public Button(int x, int y) {
+    public Button(int x, int y, String label) {
         this.x = x;
         this.y = y;
+        this.label = label;
     }
 
     /**
      * draws the city on the map | O(1)
      * @param g is the graphics
      */
-    public void draw(String name, Graphics g){
+    public void draw(Graphics g){
 
         Graphics2D g2 = (Graphics2D) g;
 
@@ -29,13 +31,13 @@ public class Button {
         if (hovered) {
             g2.setColor(new Color(121, 190, 88));
             g2.fillOval(x - size, y - size, size*2, size*2);
-            displayName(name, g);
+            displayName(label, g);
         }
 
         if (pressed) {
             g2.setColor(new Color(0, 64, 26));
             g2.fillOval(x - size, y - size, size*2, size*2);
-            displayName(name, g);
+            displayName(label, g);
         }
 
         g2.setStroke(new BasicStroke(1));
