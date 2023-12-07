@@ -20,8 +20,9 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private final Color dark_green = new Color(0, 64, 26);
     private final Color light_green = new Color(121, 190, 88);
     private LinkedList<Vertex> path;
-
     private Image pointer;
+
+    private float time;
 
     public Map() {
         initMap();
@@ -181,15 +182,15 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
+        time += 0.06F;
 
         setBackground(dark_green);
 
         drawBoundary(g);
-//        drawRoads(g);
         drawPath(g);
         drawCities(g);
-        drawPointers(g);
         paintText(g);
+        drawPointers(g);
 
     }
 
@@ -230,7 +231,7 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 200);
 
         str = "Distance:";
-        if (toVertex != null)
+        if (toVertex != null && time > path.size)
             str += " " + toVertex.getShortestDistance() + " km";
         else str += " \t-";
 
@@ -288,27 +289,13 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * draws the edges of the graph (roads) | O(E)
-     * @param g is the graphics
-     */
-    private void drawRoads(Graphics g) {
-
-        for (Vertex v1 : pakistan.getVertices()) {
-            for (Vertex v2: v1.getAdjacentVertices()) {
-                drawLine(g, v1.getCity(), v2.getCity(), Color.white);
-            }
-        }
-
-    }
-
-    /**
      * draws a line between two cities | O(1)
-     * @param g is the graphics
+     *
+     * @param g  is the graphics
      * @param c1 is the first city
      * @param c2 is the second city
-     * @param color is the color of the line
      */
-    private void drawLine(Graphics g, City c1, City c2, Color color){
+    private void drawLine(Graphics g, City c1, City c2, float i){
 
         if (c1 == null || c2 == null)
             return;
@@ -318,11 +305,19 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         int toX = c2.getButton().getX();
         int toY = c2.getButton().getY();
 
+        float progress = time - i;
+        Point endPoint;
+
+        if (progress > 1)
+            endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), 1);
+        else endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), time % 1);
+
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setStroke(new BasicStroke(2));
-        g2.setColor(color);
-        g2.drawLine(fromX, fromY, toX, toY);
+        g2.setColor(Color.red);
+        g2.drawLine(fromX, fromY, endPoint.x, endPoint.y);
+
         g2.setStroke(new BasicStroke(1));
 
     }
@@ -350,39 +345,47 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
      */
     private void drawPath(Graphics g) {
 
-        if (fromVertex == null || toVertex == null || path == null)
+        if (fromVertex == null || toVertex == null || path == null) {
+            time = 0;
             return;
+        }
 
         Node<Vertex> current = path.head;
 
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(3));
+        float i = 0;
+        int j = 0;
+
         while (current != null && current.next != null) {
-            drawLine(g, current.data.getCity(), current.next.data.getCity(), Color.red);
+            City c1 = current.data.getCity();
+            City c2 = current.next.data.getCity();
+            if (i < time) {
+                drawLine(g, c1, c2, i);
+                writePathDetails(g, c1, c2, (int)i);
+            }
             current = current.next;
+            i++;
         }
 
-        writePathDetails(g);
+        g2.setStroke(new BasicStroke(1));
 
     }
 
     /**
-     * writes the sub-paths along with their distances on the right | O(n)
+     * writes the path details between two cities
      * @param g is the graphics
+     * @param c1 is the source city
+     * @param c2 is the destination city
+     * @param i is the city number
      */
-    private void writePathDetails(Graphics g) {
+    private void writePathDetails(Graphics g, City c1, City c2, int i) {
 
         g.setColor(Color.white);
 
-        Node<Vertex> current = path.head;
-
-        int i = 0;
-        while (current != null && current.next != null) {
-            City c1 = current.data.getCity();
-            City c2 = current.next.data.getCity();
-            String str = c1.getName() + " -> " + c2.getName() + " | " + getDistance(c1, c2) + " km";
-            g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 300 + 30*i);
-            current = current.next;
-            i++;
-        }
+        String str = c1.getName() + " -> " + c2.getName() + " | " + getDistance(c1, c2) + " km";
+        g.setColor(Color.white);
+        g.drawString(str, 3 * B_WIDTH / 4 - g.getFontMetrics().stringWidth(str) / 2 - 50, 300 + 30 * i);
 
     }
 
@@ -393,10 +396,10 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private void drawPointers(Graphics g) {
 
         if (fromVertex != null)
-            g.drawImage(pointer, fromVertex.getCity().getButton().getX(), getX() - pointer.getWidth(this)/2, fromVertex.getCity().getButton().getY(), getY() - pointer.getHeight(this), this);
+            g.drawImage(pointer, fromVertex.getCity().getButton().getX() - pointer.getWidth(this)/2, fromVertex.getCity().getButton().getY() - pointer.getHeight(this), this);
 
         if (toVertex != null)
-            g.drawImage(pointer, toVertex.getCity().getButton().getX(), getX() - pointer.getWidth(this)/2, toVertex.getCity().getButton().getY(), getY() - pointer.getHeight(this), this);
+            g.drawImage(pointer, toVertex.getCity().getButton().getX() - pointer.getWidth(this)/2, toVertex.getCity().getButton().getY() - pointer.getHeight(this), this);
 
     }
 
@@ -522,5 +525,28 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         return (float) Math.sqrt((lng*lng + lat*lat));
 
+    }
+
+    /**
+     * linearly interpolate between two points at t percent
+     * @param p1 is the initial point
+     * @param p2 is the final point
+     * @param t is the percentage
+     * @return the interpolated point
+     */
+    private Point interpolate(Point p1, Point p2, float t) {
+
+        int x = lerp(p1.x, p2.x, t);
+        int y = lerp(p1.y, p2.y, t);
+
+        return new Point(x, y);
+
+    }
+
+    /**
+     * returns a value at t percent between the init and final value (linear interpolation)
+     */
+    private int lerp(int z1, int z2, float t){
+        return z1 + (int)((z2 - z1) * t);
     }
 }

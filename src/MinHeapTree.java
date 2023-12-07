@@ -24,17 +24,6 @@ public class MinHeapTree<T extends Comparable<T>> {
 
     }
 
-    public boolean contains(T data) {
-
-        for (int i = 0; i < size; i++) {
-            if (data.equals(heap[i]))
-                return true;
-        }
-
-        return false;
-
-    }
-
     public void insert(T data) {
 
         if (isFull()) {
