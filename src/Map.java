@@ -404,7 +404,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     }
 
     /**
-     * monitors the mouse presses (click + release)
+     * monitors the mouse presses (click + release) | O(E*logV)
      * @param e the event to be processed
      */
     @Override
@@ -474,6 +474,10 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
 		// TODO Auto-generated method stub
 	}
 
+    /**
+     * monitors the key presses (click + release) | O(E*logV)
+     * @param e the event to be processed
+     */
     @Override
     public void keyPressed(KeyEvent e) {
 
@@ -483,8 +487,41 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         if (e.getKeyCode() == KeyEvent.VK_C)
             select_bg_color();
 
-        if (e.getKeyCode() == KeyEvent.VK_S)
-            searchCityByName();
+        if (e.getKeyCode() == KeyEvent.VK_S) {
+
+            path = null;
+            String city_name = JOptionPane.showInputDialog("Please enter a city name: ");
+            Vertex vertex = searchCityByName(city_name);
+
+            if (vertex == null) {
+                JOptionPane.showMessageDialog(null, "City not found!");
+                return;
+            }
+
+            if (fromVertex == null) {
+                fromVertex = vertex;
+                fromVertex.getCity().getButton().setPressed(true);
+                return;
+            }
+
+            if (toVertex == null) {
+                toVertex = vertex;
+                toVertex.getCity().getButton().setPressed(true);
+                getPath();
+                return;
+            }
+
+            // resetting previously selected vertices and path
+            path = null;
+            fromVertex.getCity().getButton().setPressed(false);
+            toVertex.getCity().getButton().setPressed(false);
+            toVertex = null;
+
+            // setting source vertex
+            fromVertex = vertex;
+            fromVertex.getCity().getButton().setPressed(true);
+
+        }
 
     }
 
@@ -534,8 +571,6 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      * @return the distance in kms
      */
     public static float getDistance(City c1, City c2) {
-
-        // https://www.thoughtco.com/degree-of-latitude-and-longitude-distance-4070616
 
         double lng = (Math.abs(c1.getLng() - c2.getLng())*111.321);
         double lat = (Math.abs(c1.getLat() - c2.getLat())*68.703);
@@ -600,19 +635,15 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     /**
      * searches a city by its name through binary search | log(V)
      */
-    private void searchCityByName() {
+    private Vertex searchCityByName(String city_name) {
 
         Vertex vertex = null;
-        path = null;
-
-        String city_name = JOptionPane.showInputDialog("Please enter a city name: ");
-
         Vertex[] vertices = pakistan.getVertices();
 
         int start = 0;
         int end = vertices.length - 1;
 
-        while (start < end) {
+        while (start <= end) {
             int mid = (start + end) / 2;
             if (city_name.compareToIgnoreCase(vertices[mid].getCity().getName()) > 0)
                 start = mid + 1;
@@ -624,37 +655,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
             }
         }
 
-        if (city_name.compareToIgnoreCase(vertices[start].getCity().getName()) == 0)
-            vertex = vertices[start];
-
-        if (vertex == null) {
-            JOptionPane.showMessageDialog(null, "City Not Found!");
-            return;
-        }
-
-        if (fromVertex == null) {
-            fromVertex = vertex;
-            fromVertex.getCity().getButton().setPressed(true);
-            return;
-        }
-
-        if (toVertex == null) {
-            toVertex = vertex;
-            toVertex.getCity().getButton().setPressed(true);
-            getPath();
-            return;
-        }
-
-        // resetting previously selected vertices and path
-        path = null;
-        fromVertex.getCity().getButton().setPressed(false);
-        toVertex.getCity().getButton().setPressed(false);
-        toVertex = null;
-
-        // setting source vertex
-        fromVertex = vertex;
-        fromVertex.getCity().getButton().setPressed(true);
-
+        return vertex;
     }
 
 }
