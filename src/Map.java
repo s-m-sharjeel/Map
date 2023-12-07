@@ -1,14 +1,12 @@
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class Map extends JPanel implements ActionListener , MouseInputListener {
+public class Map extends JPanel implements ActionListener, MouseInputListener, KeyListener {
 
     private static final int B_WIDTH = 760 * 2;
     private static final int B_HEIGHT = 760;
@@ -19,26 +17,55 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private Vertex toVertex;
     private final Color dark_green = new Color(0, 64, 26);
     private final Color light_green = new Color(121, 190, 88);
+    private Color[] bg_colors;
+    private Color bg_color;
+    private int bg_color_selected;
+    private Color font_color;
+    private String font_style;
     private LinkedList<Vertex> path;
     private Image pointer;
 
-    private float time;
+    private float count;
 
     public Map() {
         initMap();
     }
 
     /**
+     * O(E * V), where V and E are total number of vertices and edges respectively
+     */
+    private void initMap() {
+
+        initializeAssets();
+
+        addMouseListener( this );
+        addMouseMotionListener( this );
+        addKeyListener( this );
+        setBackground(Color.WHITE);
+        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
+        setFocusable(true);
+
+        int DELAY = 0;
+        Timer timer = new Timer(DELAY, this);
+        timer.start();
+    }
+
+    /**
      * initializes the entire map, including cities and boundaries
      * O(E * V), where V and E are total number of vertices and edges respectively
      */
-    private void InitializeAssets() {
+    private void initializeAssets() {
 
         constructGraph();
         constructRegions();
 
         ImageIcon icon = new ImageIcon("./src/location.png");
         pointer = icon.getImage();
+
+        bg_colors = new Color[]{Color.white, Color.black, dark_green};
+        bg_color = bg_colors[bg_color_selected];
+        font_color = Color.black;
+        font_style = Font.SERIF;
 
     }
 
@@ -144,37 +171,6 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
-     * O(E * V), where V and E are total number of vertices and edges respectively
-     */
-    private void initMap() {
-
-        /*
-
-         for city coordinates:
-         https://simplemaps.com/data/world-cities
-
-         for verification of neighbouring cities
-         https://data.humdata.org/dataset/a64d1ff2-7158-48c7-887d-6af69ce21906
-
-         for pakistan boundary:
-         https://cartographyvectors.com/map/998-pakistan-detailed-boundary
-
-         */
-
-        InitializeAssets();
-
-        addMouseListener( this );
-        addMouseMotionListener( this );
-        setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
-        setFocusable(true);
-
-        int DELAY = 10;
-        Timer timer = new Timer(DELAY, this);
-        timer.start();
-    }
-
-    /**
      * repaints the panel | O(V)
      * @param g the <code>Graphics</code> object to protect
      */
@@ -182,27 +178,25 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-        time += 0.06F;
+        count += 0.05F;
 
-        setBackground(dark_green);
+        setBackground(bg_color);
 
         drawBoundary(g);
         drawPath(g);
         drawCities(g);
-        paintText(g);
+        writeText(g);
         drawPointers(g);
 
     }
 
     /**
-     * paints text on the panel | O(1)
+     * paints the general text on the panel | O(1)
      * @param g is the graphics
      */
-    private void paintText(Graphics g) {
+    private void writeText(Graphics g) {
 
-        String font_style = Font.SERIF;
-        Color font_color = Color.white;
-        Color shadow = Color.black;
+        Color shadow = Color.gray;
 
         // for shadow effect
         int gap = 4;
@@ -230,8 +224,9 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
         g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 200);
 
+        // shows the path distance once the animation is complete
         str = "Distance:";
-        if (toVertex != null && time > path.size)
+        if (path != null && count > path.size)
             str += " " + toVertex.getShortestDistance() + " km";
         else str += " \t-";
 
@@ -289,6 +284,38 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     }
 
     /**
+     * draws the complete shortest path between the source and destination city | O(n)
+     * @param g is the graphics
+     */
+    private void drawPath(Graphics g) {
+
+        if (path == null) {
+            count = 0;
+            return;
+        }
+
+        Node<Vertex> current = path.head;
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(3));
+        float i = 0;
+
+        while (current != null && current.next != null) {
+            City c1 = current.data.getCity();
+            City c2 = current.next.data.getCity();
+            if (i < count) {
+                drawLine(g, c1, c2, i);
+                writePathDetails(g, c1, c2, (int)i);
+            }
+            current = current.next;
+            i++;
+        }
+
+        g2.setStroke(new BasicStroke(1));
+
+    }
+
+    /**
      * draws a line between two cities | O(1)
      *
      * @param g  is the graphics
@@ -305,12 +332,12 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         int toX = c2.getButton().getX();
         int toY = c2.getButton().getY();
 
-        float progress = time - i;
+        float progress = count - i;
         Point endPoint;
 
         if (progress > 1)
             endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), 1);
-        else endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), time % 1);
+        else endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), count % 1);
 
         Graphics2D g2 = (Graphics2D) g;
 
@@ -319,6 +346,36 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
         g2.drawLine(fromX, fromY, endPoint.x, endPoint.y);
 
         g2.setStroke(new BasicStroke(1));
+
+    }
+
+    /**
+     * writes the path details between two cities
+     * @param g is the graphics
+     * @param c1 is the source city
+     * @param c2 is the destination city
+     * @param i is the city number
+     */
+    private void writePathDetails(Graphics g, City c1, City c2, int i) {
+
+        g.setColor(font_color);
+
+        String str = c1.getName() + " -> " + c2.getName() + " | " + getDistance(c1, c2) + " km";
+        g.drawString(str, 3 * B_WIDTH / 4 - g.getFontMetrics().stringWidth(str) / 2 - 50, 300 + 30 * i);
+
+    }
+
+    /**
+     * draws the location markers | O(1)
+     * @param g is the graphics
+     */
+    private void drawPointers(Graphics g) {
+
+        if (fromVertex != null)
+            g.drawImage(pointer, fromVertex.getCity().getButton().getX() - pointer.getWidth(this)/2, fromVertex.getCity().getButton().getY() - pointer.getHeight(this), this);
+
+        if (toVertex != null)
+            g.drawImage(pointer, toVertex.getCity().getButton().getX() - pointer.getWidth(this)/2, toVertex.getCity().getButton().getY() - pointer.getHeight(this), this);
 
     }
 
@@ -339,68 +396,11 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
-    /**
-     * draws the complete shortest path between the source and destination city | O(n)
-     * @param g is the graphics
-     */
-    private void drawPath(Graphics g) {
-
-        if (fromVertex == null || toVertex == null || path == null) {
-            time = 0;
-            return;
-        }
-
-        Node<Vertex> current = path.head;
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(3));
-        float i = 0;
-        int j = 0;
-
-        while (current != null && current.next != null) {
-            City c1 = current.data.getCity();
-            City c2 = current.next.data.getCity();
-            if (i < time) {
-                drawLine(g, c1, c2, i);
-                writePathDetails(g, c1, c2, (int)i);
-            }
-            current = current.next;
-            i++;
-        }
-
-        g2.setStroke(new BasicStroke(1));
-
-    }
-
-    /**
-     * writes the path details between two cities
-     * @param g is the graphics
-     * @param c1 is the source city
-     * @param c2 is the destination city
-     * @param i is the city number
-     */
-    private void writePathDetails(Graphics g, City c1, City c2, int i) {
-
-        g.setColor(Color.white);
-
-        String str = c1.getName() + " -> " + c2.getName() + " | " + getDistance(c1, c2) + " km";
-        g.setColor(Color.white);
-        g.drawString(str, 3 * B_WIDTH / 4 - g.getFontMetrics().stringWidth(str) / 2 - 50, 300 + 30 * i);
-
-    }
-
-    /**
-     * draws the location markers | O(1)
-     * @param g is the graphics
-     */
-    private void drawPointers(Graphics g) {
-
-        if (fromVertex != null)
-            g.drawImage(pointer, fromVertex.getCity().getButton().getX() - pointer.getWidth(this)/2, fromVertex.getCity().getButton().getY() - pointer.getHeight(this), this);
-
-        if (toVertex != null)
-            g.drawImage(pointer, toVertex.getCity().getButton().getX() - pointer.getWidth(this)/2, toVertex.getCity().getButton().getY() - pointer.getHeight(this), this);
-
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Toolkit.getDefaultToolkit().sync();
+        // the gui is repainted everytime any action is performed
+        repaint();
     }
 
     /**
@@ -449,13 +449,6 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Toolkit.getDefaultToolkit().sync();
-        // the gui is repainted everytime any action is performed
-        repaint();
-    }
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -480,6 +473,30 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
 	public void mouseDragged(MouseEvent e) {
 		// TODO Auto-generated method stub
 	}
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+        if (e.getKeyCode() == KeyEvent.VK_D)
+            toggle_bg_color();
+
+        if (e.getKeyCode() == KeyEvent.VK_C)
+            select_bg_color();
+
+        if (e.getKeyCode() == KeyEvent.VK_S)
+            searchCityByName();
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // TODO Auto-generated method stub
+    }
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
@@ -549,4 +566,95 @@ public class Map extends JPanel implements ActionListener , MouseInputListener {
     private int lerp(int z1, int z2, float t){
         return z1 + (int)((z2 - z1) * t);
     }
+
+    /**
+     * toggles the background color between the 3 presets: white, black, green
+     */
+    private void toggle_bg_color() {
+
+        bg_color_selected = ++bg_color_selected % bg_colors.length;
+
+        if (bg_color_selected == 0)
+            font_color = Color.black;
+        else font_color = Color.white;
+
+        bg_color = bg_colors[bg_color_selected];
+
+    }
+
+    /**
+     * sets bg color of user's choice | O(1)
+     */
+    private void select_bg_color() {
+
+        Color color = JColorChooser.showDialog(this, "Please select a color:", Color.white);
+
+        if (color != Color.white)
+            font_color = Color.black;
+        else font_color = Color.white;
+
+        bg_color = color;
+
+    }
+
+    /**
+     * searches a city by its name through binary search | log(V)
+     */
+    private void searchCityByName() {
+
+        Vertex vertex = null;
+        path = null;
+
+        String city_name = JOptionPane.showInputDialog("Please enter a city name: ");
+
+        Vertex[] vertices = pakistan.getVertices();
+
+        int start = 0;
+        int end = vertices.length - 1;
+
+        while (start < end) {
+            int mid = (start + end) / 2;
+            if (city_name.compareToIgnoreCase(vertices[mid].getCity().getName()) > 0)
+                start = mid + 1;
+            else if (city_name.compareToIgnoreCase(vertices[mid].getCity().getName()) < 0)
+                end = mid - 1;
+            else {
+                vertex = vertices[mid];
+                break;
+            }
+        }
+
+        if (city_name.compareToIgnoreCase(vertices[start].getCity().getName()) == 0)
+            vertex = vertices[start];
+
+        if (vertex == null) {
+            JOptionPane.showMessageDialog(null, "City Not Found!");
+            return;
+        }
+
+        if (fromVertex == null) {
+            fromVertex = vertex;
+            fromVertex.getCity().getButton().setPressed(true);
+            return;
+        }
+
+        if (toVertex == null) {
+            toVertex = vertex;
+            toVertex.getCity().getButton().setPressed(true);
+            getPath();
+            return;
+        }
+
+        // resetting previously selected vertices and path
+        path = null;
+        fromVertex.getCity().getButton().setPressed(false);
+        toVertex.getCity().getButton().setPressed(false);
+        toVertex = null;
+
+        // setting source vertex
+        fromVertex = vertex;
+        fromVertex.getCity().getButton().setPressed(true);
+
+    }
+
 }
