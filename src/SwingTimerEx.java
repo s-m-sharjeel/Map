@@ -14,8 +14,9 @@ public class SwingTimerEx extends JFrame {
         ImageIcon icon = new ImageIcon("./src/pak.png");
         setIconImage(icon.getImage());
 
-        setResizable(false);
+        setResizable(true);
         pack();
+        setExtendedState(MAXIMIZED_BOTH);
 
         setTitle("Map");
         setLocationRelativeTo(null);

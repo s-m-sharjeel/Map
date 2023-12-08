@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 public class Map extends JPanel implements ActionListener, MouseInputListener, KeyListener {
 
-    private static final int B_WIDTH = 760 * 2;
-    private static final int B_HEIGHT = 760;
+    private static final int B_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
+    private static final int B_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
     private Graph pakistan;
     private Polygon[] regions;
@@ -65,7 +65,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         bg_colors = new Color[]{Color.white, Color.black, dark_green};
         bg_color = bg_colors[bg_color_selected];
         font_color = Color.black;
-        font_style = Font.SERIF;
+        font_style = Font.MONOSPACED;
 
     }
 
@@ -199,7 +199,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         Color shadow = Color.gray;
 
         // for shadow effect
-        int gap = 4;
+        int gap = 2;
 
         g.setFont(new Font(font_style, Font.BOLD, 40));
         String str = "PAKISTAN";
@@ -208,7 +208,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         g.setColor(font_color);
         g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 100);
 
-        g.setFont(new Font(font_style, Font.PLAIN, 20));
+        g.setFont(new Font(font_style, Font.BOLD, 25));
 
         str = "From:";
         if (fromVertex != null)
@@ -223,14 +223,6 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         else str += " \t-";
 
         g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 200);
-
-        // shows the path distance once the animation is complete
-        str = "Distance:";
-        if (path != null && count > path.size)
-            str += " " + toVertex.getShortestDistance() + " km";
-        else str += " \t-";
-
-        g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 230);
 
     }
 
@@ -311,6 +303,14 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
             i++;
         }
 
+        // shows the path distance once the animation is complete
+        if (count > path.size - 1) {
+            String str = "Distance: " + toVertex.getShortestDistance() + " km";
+            g2.setFont(new Font(font_style, Font.BOLD, 25));
+            g2.setColor(font_color);
+            g2.drawString("Distance: " + toVertex.getShortestDistance() + " km", 3 * B_WIDTH / 4 - g2.getFontMetrics().stringWidth(str) / 2 - 50, 270 + 30 * i);
+        }
+
         g2.setStroke(new BasicStroke(1));
 
     }
@@ -335,16 +335,20 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         float progress = count - i;
         Point endPoint;
 
-        if (progress > 1)
-            endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), 1);
-        else endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), count % 1);
-
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setStroke(new BasicStroke(2));
-        g2.setColor(Color.red);
-        g2.drawLine(fromX, fromY, endPoint.x, endPoint.y);
+        if (progress > 1) {
+            endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), 1);
+        } else {
+            endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), count % 1);
+        }
 
+        if (count > path.size - 1)
+            g2.setColor(Color.green);
+        else g2.setColor(Color.red);
+
+        g2.setStroke(new BasicStroke(6));
+        g2.drawLine(fromX, fromY, endPoint.x, endPoint.y);
         g2.setStroke(new BasicStroke(1));
 
     }
@@ -358,10 +362,18 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      */
     private void writePathDetails(Graphics g, City c1, City c2, int i) {
 
-        g.setColor(font_color);
+        Graphics2D g2 = (Graphics2D) g;
+
+        g2.setStroke(new BasicStroke(4));
+
+        g2.setFont(new Font(font_style, Font.BOLD, 20));
+
+        g2.setColor(font_color);
 
         String str = c1.getName() + " -> " + c2.getName() + " | " + getDistance(c1, c2) + " km";
-        g.drawString(str, 3 * B_WIDTH / 4 - g.getFontMetrics().stringWidth(str) / 2 - 50, 300 + 30 * i);
+        g2.drawString(str, 3 * B_WIDTH / 4 - g2.getFontMetrics().stringWidth(str) / 2 - 50, 250 + 30 * i);
+
+        g2.setStroke(new BasicStroke(1));
 
     }
 
@@ -487,14 +499,24 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         if (e.getKeyCode() == KeyEvent.VK_C)
             select_bg_color();
 
-        if (e.getKeyCode() == KeyEvent.VK_S) {
+        if (e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_F) {
+
 
             path = null;
-            String city_name = JOptionPane.showInputDialog("Please enter a city name: ");
-            Vertex vertex = searchCityByName(city_name);
+            Vertex vertex;
+
+            if (e.getKeyCode() == KeyEvent.VK_S) {
+                String city_name = JOptionPane.showInputDialog("Please enter a city name: ");
+                if (city_name == null)
+                    return;
+                vertex = searchCityByName(city_name);
+
+            } else vertex = (Vertex) JOptionPane.showInputDialog(null, "Please select a city", "City Selection", JOptionPane.PLAIN_MESSAGE, null, pakistan.getVertices(), null);
 
             if (vertex == null) {
-                JOptionPane.showMessageDialog(null, "City not found!");
+                if (e.getKeyCode() == KeyEvent.VK_S)
+                    JOptionPane.showMessageDialog(null, "City not found!");
+                else JOptionPane.showMessageDialog(null, "No city selected!");
                 return;
             }
 
@@ -551,7 +573,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      * @return the x-value
      */
     public static int getXFromLNG(float lng){
-        return (Math.round(lng*40)) - 2375;
+        return (Math.round(lng*40)) - 2300;
     }
 
     /**
@@ -560,7 +582,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      * @return the y-value
      */
     public static int getYFromLAT(float lat){
-        return B_HEIGHT + 1150 - (Math.round(lat*50));
+        return B_HEIGHT + 1050 - (Math.round(lat*50));
     }
 
     /**
@@ -622,7 +644,10 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      */
     private void select_bg_color() {
 
-        Color color = JColorChooser.showDialog(this, "Please select a color:", Color.white);
+        Color color = JColorChooser.showDialog(this, "Please select a color:", null);
+
+        if (color == null)
+            return;
 
         if (color != Color.white)
             font_color = Color.black;

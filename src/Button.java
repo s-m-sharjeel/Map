@@ -4,11 +4,11 @@ public class Button {
 
     private final int x;
     private final int y;
-    private final int size = 4;
+    private final int size = 5;
     private final Color color = Color.white;
     private boolean pressed;
     private boolean hovered;
-    private String label;
+    private final String label;
 
     public Button(int x, int y, String label) {
         this.x = x;
