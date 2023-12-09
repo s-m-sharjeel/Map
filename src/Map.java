@@ -25,7 +25,8 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     private LinkedList<Vertex> path;
     private Image pointer;
 
-    private float count;
+    private float animation_counter;
+    private float animation_speed;
 
     public Map() {
         initMap();
@@ -59,13 +60,22 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         constructGraph();
         constructRegions();
 
+        // quick sorting in O(V*logV)
+        pakistan.sort();
+
+        // initializing the pointer icon to mark a selected city
         ImageIcon icon = new ImageIcon("./src/location.png");
         pointer = icon.getImage();
 
+        // initializing the colors and fonts
         bg_colors = new Color[]{Color.white, Color.black, dark_green};
+        bg_color_selected = 2;
         bg_color = bg_colors[bg_color_selected];
-        font_color = Color.black;
-        font_style = Font.MONOSPACED;
+        font_color = Color.white;
+        font_style = Font.DIALOG_INPUT;
+
+        // initializing animation speed
+        animation_speed = 0.075F;
 
     }
 
@@ -178,8 +188,6 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-        count += 0.05F;
-
         setBackground(bg_color);
 
         drawBoundary(g);
@@ -232,35 +240,37 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      */
     private void drawBoundary(Graphics g) {
 
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.black);
-        g2.setStroke(new BasicStroke(2));
-
+        // kashmir
         g.setColor(new Color(0, 100, 255));
         g.fillPolygon(regions[0]);
 
+        // balochistan
         g.setColor(Color.yellow);
         g.fillPolygon(regions[1]);
 
+        // federally administered tribal areas (FATA)
         g.setColor(Color.magenta);
         g.fillPolygon(regions[2]);
 
+        // federal capital
         g.setColor(Color.cyan);
         g.fillPolygon(regions[3]);
 
+        // gilgit baltistan
         g.setColor(Color.orange);
         g.fillPolygon(regions[4]);
 
+        // federally administered northern areas (FANA)
         g.setColor(Color.pink);
         g.fillPolygon(regions[5]);
 
+        // punjab
         g.setColor(light_green);
         g.fillPolygon(regions[6]);
 
+        // sindh
         g.setColor(new Color(255, 100, 100));
         g.fillPolygon(regions[7]);
-
-        g2.setStroke(new BasicStroke(1));
 
     }
 
@@ -281,34 +291,36 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      */
     private void drawPath(Graphics g) {
 
+        // no path exists
         if (path == null) {
-            count = 0;
+            animation_counter = 0;
             return;
         }
 
+        // traversing path linked list using current (temp) vertex
         Node<Vertex> current = path.head;
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(3));
-        float i = 0;
 
-        while (current != null && current.next != null) {
+        // drawing path and writing details for each partial path
+        for (int i = 0; i < path.size - 1; i++) {
             City c1 = current.data.getCity();
             City c2 = current.next.data.getCity();
-            if (i < count) {
+            // animating the path drawing and details writing using a count (local timer)
+            if (i < animation_counter) {
                 drawLine(g, c1, c2, i);
-                writePathDetails(g, c1, c2, (int)i);
+                writePathDetails(g, c1, c2, i);
             }
             current = current.next;
-            i++;
         }
 
         // shows the path distance once the animation is complete
-        if (count > path.size - 1) {
+        if (animation_counter > path.size - 1) {
             String str = "Distance: " + toVertex.getShortestDistance() + " km";
             g2.setFont(new Font(font_style, Font.BOLD, 25));
             g2.setColor(font_color);
-            g2.drawString("Distance: " + toVertex.getShortestDistance() + " km", 3 * B_WIDTH / 4 - g2.getFontMetrics().stringWidth(str) / 2 - 50, 270 + 30 * i);
+            g2.drawString("Distance: " + toVertex.getShortestDistance() + " km", (float) (3 * B_WIDTH) / 4 - (float) g2.getFontMetrics().stringWidth(str) / 2 - 50, 270 + 30 * (path.size - 1));
         }
 
         g2.setStroke(new BasicStroke(1));
@@ -332,22 +344,21 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         int toX = c2.getButton().getX();
         int toY = c2.getButton().getY();
 
-        float progress = count - i;
+        float progress = animation_counter - i;
         Point endPoint;
 
         Graphics2D g2 = (Graphics2D) g;
 
-        if (progress > 1) {
-            endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), 1);
-        } else {
-            endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), count % 1);
-        }
+        if (progress <= 1)
+            endPoint = interpolate(new Point(fromX, fromY), new Point(toX, toY), animation_counter % 1);
+        else endPoint = new Point(toX, toY);
 
-        if (count > path.size - 1)
+
+        if (animation_counter > path.size - 1)
             g2.setColor(Color.green);
         else g2.setColor(Color.red);
 
-        g2.setStroke(new BasicStroke(6));
+        g2.setStroke(new BasicStroke(5));
         g2.drawLine(fromX, fromY, endPoint.x, endPoint.y);
         g2.setStroke(new BasicStroke(1));
 
@@ -397,22 +408,26 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      */
     private void getPath() {
 
-        if (fromVertex != null && toVertex != null) {
+        if (fromVertex == null || toVertex == null)
+            return;
 
-            for (Vertex vertex : pakistan.getVertices())
-                vertex.resetVertex();
+        for (Vertex vertex : pakistan.getVertices())
+            vertex.resetVertex();
 
-            path = Dijkstra.getShortestPath(fromVertex, toVertex);
 
-        }
+        path = Dijkstra.getShortestPath(fromVertex, toVertex);
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Toolkit.getDefaultToolkit().sync();
+
         // the gui is repainted everytime any action is performed
         repaint();
+
+        // local timer incremented by some value
+        animation_counter += animation_speed;
     }
 
     /**
@@ -427,12 +442,11 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
 
         // resetting if none of the cities has been selected
         if (fromVertex != null && toVertex != null){
-            for (Vertex v : pakistan.getVertices()) {
-                v.getCity().getButton().setPressed(false);
-            }
-            fromVertex = null;
-            toVertex = null;
             path = null;
+            fromVertex.getCity().getButton().setPressed(false);
+            fromVertex = null;
+            toVertex.getCity().getButton().setPressed(false);
+            toVertex = null;
         }
 
         // setting the source city as the one pressed (if any)
@@ -501,7 +515,6 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
 
         if (e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_F) {
 
-
             path = null;
             Vertex vertex;
 
@@ -542,6 +555,22 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
             // setting source vertex
             fromVertex = vertex;
             fromVertex.getCity().getButton().setPressed(true);
+
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+
+            path = null;
+
+            if (fromVertex != null) {
+                fromVertex.getCity().getButton().setPressed(false);
+                fromVertex = null;
+            }
+
+            if (toVertex != null) {
+                toVertex.getCity().getButton().setPressed(false);
+                toVertex = null;
+            }
 
         }
 
@@ -649,7 +678,8 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         if (color == null)
             return;
 
-        if (color != Color.white)
+        // setting font as white/black depending on the intensity of the bg color
+        if (color.getRed()*0.299 + color.getGreen()*0.587 + color.getBlue()*0.114 > 186)
             font_color = Color.black;
         else font_color = Color.white;
 

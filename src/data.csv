@@ -1,74 +1,74 @@
 City,lat,lng,neighbouring cities
-Abbottabad,34.15,73.2167,Murree
-Attock,33.7667,72.3667,Rawalpindi, Chakwal, Mianwali, Sargodha, Khushab, Islamabad, Nowshera
 Badin,24.6558,68.8383,Thatta
-Bahawalpur,29.3956,71.6722,Multan, Rahim Yar Khan, Sahiwal, Dera Ghazi Khan, Khanewal
-Bannu,32.9889,70.6056,Karak, Dera Ismail Khan,
-Basima,27.9094,65.8739, Surab, Khuzdar, Panjgur, Kharan
-Chakwal,32.93,72.85,Attock, Islamabad, Rawalpindi, Jhelum, Sargodha, Khushab,
-Chaman,30.921,66.4597, Pashin, Quetta,
-Charsadda,34.1453,71.7308,Peshawar, Mardan, Nowshera
-Dalbandin,28.8854,64.3964,Noshki
-Dera Bugti,29.0362,69.1585, Sibi
-Dera Ghazi Khan,30.05,70.6333, Rajanpur, Muzaffargarh, Bahawalpur, Dera Ismail Khan
-Dera Ismail Khan,31.8167,70.9167,Bannu, Zhob, Dera Ghazi Khan, Mianwali
-Dir,35.1977,71.8749,Malakand, Mardan, Peshawar
-Faisalabad,31.418,73.079,Lahore, Jhang, Toba Tek Singh, Sargodha, Okara, Hafizabad,
-Gujranwala,32.15,74.1833,Lahore, Sheikhupura, Hafizabad, Sialkot, Gujrat, Mandi Bahauddin, Sargodha
-Gujrat,32.5736,74.0789,Gujranwala, Jhelum, Sargodha, Mandi Bahauddin, Hafizabad, Islamabad, Rawalpindi, Sialkot
-Gwadar,25.1264,62.3225, Turbat, Pasni,
-Hafizabad,32.0709,73.688,Gujranwala, Gujrat, Lahore, Faisalabad
-Hyderabad,25.3792,68.3683, Karachi, Sanghar, Nawabshah, Tando Allahyar, Thatta
-Islamabad,33.6989,73.0369,Rawalpindi, Jhelum, Gujrat, Attock, Chakwal, Murree,
-Jacobabad,28.2769,68.4514,Larkana, Shikarpur, Sibi
-Jhang,31.2681,72.3181,Faisalabad, Sargodha, Toba Tek Singh, Okara
-Jhelum,32.9333,73.7333,Rawalpindi, Gujrat, Sargodha, Mianwali, Khushab, Islamabad, Chakwal
-Kalat,29.0258,66.59, Quetta, Surab,
-Karachi,24.86,67.01,Hyderabad, Thatta, Lasbela
-Karak,33.1167,71.0833,Bannu, Kohat,
-Kashmore,28.4482,69.5857,Sukkur, Shikarpur, Rajanpur
-Khairpur,27.5295,68.7592,Larkana, Nawabshah, Sukkur
-Khanewal,30.3017,71.9321,Multan, Bahawalpur, Toba Tek Singh, Sahiwal
-Kharan,28.5855,65.4163, Basima, Noshki,
-Khushab,32.2917,72.35,Attock, Jhelum, Sargodha, Mianwali, Chakwal
-Khuzdar,27.8,66.6167, Lasbela, Larkana, Surab, Basima
-Kohat,33.5869,71.4414,Karak, Peshawar,
-Lahore,31.5497,74.3436,Faisalabad, Sheikhupura, Gujranwala, Sargodha, Hafizabad, Okara,
-Larkana,27.56,68.2264,Shikarpur, Sukkur, Jacobabad, Khairpur, Khuzdar
-Lasbela,25.87,66.7129, Ormara, Karachi, Khuzdar
-Malakand,34.5656,71.9304,Dir, Swat, Mohmand, Mardan, Peshawar
-Mandi Bahauddin,32.5861,73.4917,Gujranwala, Gujrat, Sargodha
-Mardan,34.1958,72.0447, Malakand, Dir, Mohmand, Charsadda, Nowshera
-Mianwali,32.5853,71.5436,Attock, Jhelum, Dera Ismail Khan, Khushab
-Mohmand,34.5356,71.2874,Malakand, Mardan, Peshawar
-Multan,30.1978,71.4711,Muzaffargarh, Bahawalpur, Khanewal, Rahim Yar Khan
-Murree,33.907,73.3943, Islamabad, Abbottabad,
-Muzaffargarh,30.0703,71.1933,Dera Ghazi Khan, Multan,
-Nawabshah,26.2442,68.41,Hyderabad, Sanghar, Khairpur
-Noshki,29.5514,66.0107,Quetta, Dalbandin, Kharan
-Nowshera,34.0153,71.9747,Charsadda, Peshawar, Attock, Mardan
-Okara,30.81,73.4597,Lahore, Sahiwal, Faisalabad, Sheikhupura, Jhang
-Ormara,25.2666,64.6096, Pasni, Lasbela,
-Panjgur,26.9706,64.0887, Turbat, Basima,
-Pashin,30.5833,67,Quetta, Zhob, Chaman
-Pasni,25.251,63.4154, Gwadar, Turbat, Ormara
-Peshawar,34,71.5,Charsadda, Nowshera, Kohat, Malakand, Dir, Mohmand,
-Quetta,30.192,67.007,Pashin, Zhob, Kalat, Sibi, Chaman, Noshki,
-Rahim Yar Khan,28.4202,70.2952, Multan, Rajanpur, Bahawalpur, Sukkur
-Rajanpur,29.1041,70.3297, Dera Ghazi Khan, Rahim Yar Khan, Kashmore
-Rawalpindi,33.6007,73.0679,Islamabad, Jhelum, Gujrat, Chakwal, Attock
-Sahiwal,30.6706,73.1064,Bahawalpur, Khanewal, Okara, Sargodha
-Sanghar,26.0464,68.9481,Hyderabad, Nawabshah,
-Sargodha,32.0836,72.6711, Khushab, Faisalabad, Jhang, Gujranwala, Sahiwal, Mandi Bahauddin, Gujrat, Jhelum, Lahore, Chakwal, Attock
-Sheikhupura,31.7083,74,Lahore, Gujranwala, Okara
-Shikarpur,27.9556,68.6382,Sukkur, Jacobabad, Larkana, Kashmore
-Sialkot,32.5,74.5333,Gujranwala, Gujrat,
-Sibi,29.543,67.8773,Dera Bugti, Quetta, Jacobabad
-Sukkur,27.6995,68.8673, Larkana, Shikarpur, Kashmore, Khairpur, Rahim Yar Khan
-Surab,28.4901,66.2635, Khuzdar, Kalat, Basima
-Swat,35.2227,72.4258,Malakand
-Tando Allahyar,25.4667,68.7167,Hyderabad
 Thatta,24.7461,67.9243,Karachi, Hyderabad, Badin
-Toba Tek Singh,30.9667,72.4833,Faisalabad, Jhang, Khanewal
+Karachi,24.86,67.01,Hyderabad, Thatta, Lasbela
+Gwadar,25.1264,62.3225, Turbat, Pasni,
+Pasni,25.251,63.4154, Gwadar, Turbat, Ormara
+Ormara,25.2666,64.6096, Pasni, Lasbela,
+Hyderabad,25.3792,68.3683, Karachi, Sanghar, Nawabshah, Tando Allahyar, Thatta
+Tando Allahyar,25.4667,68.7167,Hyderabad
+Lasbela,25.87,66.7129, Ormara, Karachi, Khuzdar
 Turbat,26.0031,63.0544,Gwadar, Panjgur, Pasni
+Sanghar,26.0464,68.9481,Hyderabad, Nawabshah,
+Nawabshah,26.2442,68.41,Hyderabad, Sanghar, Khairpur
+Panjgur,26.9706,64.0887, Turbat, Basima,
+Khairpur,27.5295,68.7592,Larkana, Nawabshah, Sukkur
+Larkana,27.56,68.2264,Shikarpur, Sukkur, Jacobabad, Khairpur, Khuzdar
+Sukkur,27.6995,68.8673, Larkana, Shikarpur, Kashmore, Khairpur, Rahim Yar Khan
+Khuzdar,27.8,66.6167, Lasbela, Larkana, Surab, Basima,
+Basima,27.9094,65.8739, Surab, Khuzdar, Panjgur, Kharan,
+Shikarpur,27.9556,68.6382,Sukkur, Jacobabad, Larkana, Kashmore,
+Jacobabad,28.2769,68.4514,Larkana, Shikarpur, Sibi
+Rahim Yar Khan,28.4202,70.2952, Multan, Rajanpur, Bahawalpur, Sukkur,
+Kashmore,28.4482,69.5857,Sukkur, Shikarpur, Rajanpur
+Surab,28.4901,66.2635, Khuzdar, Kalat, Basima
+Kharan,28.5855,65.4163, Basima, Noshki,
+Dalbandin,28.8854,64.3964,Noshki
+Kalat,29.0258,66.59, Quetta, Surab,
+Dera Bugti,29.0362,69.1585, Sibi
+Rajanpur,29.1041,70.3297, Dera Ghazi Khan, Rahim Yar Khan, Kashmore
+Bahawalpur,29.3956,71.6722,Multan, Rahim Yar Khan, Sahiwal, Dera Ghazi Khan, Khanewal
+Sibi,29.543,67.8773,Dera Bugti, Quetta, Jacobabad
+Noshki,29.5514,66.0107,Quetta, Dalbandin, Kharan
+Dera Ghazi Khan,30.05,70.6333, Rajanpur, Muzaffargarh, Bahawalpur, Dera Ismail Khan,
+Muzaffargarh,30.0703,71.1933,Dera Ghazi Khan, Multan,
+Quetta,30.192,67.007,Pashin, Zhob, Kalat, Sibi, Chaman, Noshki
+Multan,30.1978,71.4711,Muzaffargarh, Bahawalpur, Khanewal, Rahim Yar Khan,
+Khanewal,30.3017,71.9321,Multan, Bahawalpur, Toba Tek Singh, Sahiwal,
+Pashin,30.5833,67,Quetta, Zhob, Chaman
+Sahiwal,30.6706,73.1064,Bahawalpur, Khanewal, Okara,
+Okara,30.81,73.4597,Lahore, Sahiwal, Faisalabad, Sheikhupura, Jhang
+Chaman,30.921,66.4597, Pashin, Quetta,
+Toba Tek Singh,30.9667,72.4833,Faisalabad, Jhang, Khanewal
+Jhang,31.2681,72.3181,Faisalabad, Sargodha, Toba Tek Singh, Okara,
 Zhob,31.3417,69.4486,Quetta, Pashin, Dera Ismail Khan
+Faisalabad,31.418,73.079,Lahore, Jhang, Toba Tek Singh, Sargodha, Okara, Hafizabad
+Lahore,31.5497,74.3436,Faisalabad, Sheikhupura, Gujranwala, Sargodha, Hafizabad, Okara
+Sheikhupura,31.7083,74,Lahore, Gujranwala, Okara
+Dera Ismail Khan,31.8167,70.9167,Bannu, Zhob, Dera Ghazi Khan, Mianwali,
+Hafizabad,32.0709,73.688,Gujranwala, Gujrat, Lahore, Faisalabad,
+Sargodha,32.0836,72.6711, Khushab, Faisalabad, Jhang, Gujranwala, Mandi Bahauddin, Gujrat, Jhelum, Lahore, Chakwal
+Gujranwala,32.15,74.1833,Lahore, Sheikhupura, Hafizabad, Sialkot, Gujrat, Mandi Bahauddin, Sargodha
+Khushab,32.2917,72.35, Jhelum, Sargodha, Mianwali, Chakwal
+Sialkot,32.5,74.5333,Gujranwala, Gujrat,
+Gujrat,32.5736,74.0789,Gujranwala, Jhelum, Sargodha, Mandi Bahauddin, Hafizabad, Islamabad, Rawalpindi, Sialkot
+Mianwali,32.5853,71.5436, Jhelum, Dera Ismail Khan, Khushab,
+Mandi Bahauddin,32.5861,73.4917,Gujranwala, Gujrat, Sargodha
+Chakwal,32.93,72.85,Attock, Islamabad, Rawalpindi, Jhelum, Sargodha, Khushab
+Jhelum,32.9333,73.7333,Rawalpindi, Gujrat, Sargodha, Mianwali, Khushab, Islamabad, Chakwal
+Bannu,32.9889,70.6056,Karak, Dera Ismail Khan,
+Karak,33.1167,71.0833,Bannu, Kohat,
+Kohat,33.5869,71.4414,Karak, Peshawar
+Rawalpindi,33.6007,73.0679,Islamabad, Jhelum, Gujrat, Chakwal, Attock
+Islamabad,33.6989,73.0369,Rawalpindi, Jhelum, Gujrat, Attock, Chakwal, Murree
+Attock,33.7667,72.3667,Rawalpindi, Chakwal, Islamabad, Nowshera
+Murree,33.907,73.3943, Islamabad, Abbottabad,
+Peshawar,34,71.5,Charsadda, Nowshera, Kohat, Mohmand
+Nowshera,34.0153,71.9747,Charsadda, Peshawar, Attock, Mardan,
+Charsadda,34.1453,71.7308,Peshawar, Mardan, Nowshera
+Abbottabad,34.15,73.2167,Murree
+Mardan,34.1958,72.0447, Malakand, Mohmand, Charsadda, Nowshera
+Mohmand,34.5356,71.2874,Malakand, Mardan, Peshawar
+Malakand,34.5656,71.9304,Dir, Swat, Mohmand, Mardan
+Dir,35.1977,71.8749,Malakand
+Swat,35.2227,72.4258,Malakand

@@ -37,7 +37,6 @@ public class Button {
         if (pressed) {
             g2.setColor(new Color(0, 64, 26));
             g2.fillOval(x - size, y - size, size*2, size*2);
-            displayName(label, g);
         }
 
         g2.setStroke(new BasicStroke(1));
@@ -75,7 +74,7 @@ public class Button {
     private void displayName(String name, Graphics g){
 
         g.setColor(Color.black);
-        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 8));
+        g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
         FontMetrics m = g.getFontMetrics();
         int stringWidth = m.stringWidth(name);
         int stringHeight = m.getAscent() - m.getDescent();

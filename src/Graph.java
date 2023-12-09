@@ -68,4 +68,72 @@ public class Graph{
     public Vertex[] getVertices() {
         return vertices;
     }
+
+    /**
+     * sorts the array using quicksort | O(V*logV)
+     */
+    public void sort() {
+        quickSort(vertices, 0, vertexCount - 1);
+    }
+
+    /**
+     * quick sorting an array of vertices | O(V*logV)
+     * @param arr is the array of vertices
+     * @param low is the start index
+     * @param high is the last index
+     */
+    private void quickSort(Vertex[] arr, int low, int high)
+    {
+        if (low < high) {
+
+            int partitionIndex = partition(arr, low, high);
+
+            quickSort(arr, low, partitionIndex - 1); // sort left sub-array
+            quickSort(arr, partitionIndex + 1, high); // sort right sub-array
+
+        }
+    }
+
+    /**
+     * sorting a partial array with the help of a pivot
+     * @param arr is the array of vertices
+     * @param low is the start index
+     * @param high is the last index
+     * @return the new pivot
+     */
+    private static int partition(Vertex[] arr, int low, int high) {
+        Vertex pivot = arr[high]; // choosing the last element as pivot
+        int i = (low - 1); // index of smaller element
+
+        for (int j = low; j <= high - 1; j++) {
+            if (arr[j].getCity().getName().compareToIgnoreCase(pivot.getCity().getName()) <= 0) {
+                i++;
+                swap(arr, i, j); // swap elements
+            }
+        }
+        swap(arr, i + 1, high); // swap pivot element
+        return (i + 1);
+    }
+
+    /**
+     * swaps two elements in an array
+     * @param arr is the array
+     * @param i is the first element
+     * @param j is the second element
+     */
+    private static void swap(Vertex[] arr, int i, int j) {
+        Vertex temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+
+    @Override
+    public String toString() {
+        String s = "";
+        for (int i = 0; i < vertexCount; i++) {
+            s += vertices[i].toString() + '\n';
+        }
+        return s;
+    }
 }
