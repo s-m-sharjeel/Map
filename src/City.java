@@ -21,11 +21,11 @@ public class City{
         return name;
     }
 
-    public double getLat() {
+    public float getLat() {
         return lat;
     }
 
-    public double getLng() {
+    public float getLng() {
         return lng;
     }
 

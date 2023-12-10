@@ -193,44 +193,8 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         drawBoundary(g);
         drawPath(g);
         drawCities(g);
-        writeText(g);
         drawPointers(g);
-
-    }
-
-    /**
-     * paints the general text on the panel | O(1)
-     * @param g is the graphics
-     */
-    private void writeText(Graphics g) {
-
-        Color shadow = Color.gray;
-
-        // for shadow effect
-        int gap = 2;
-
-        g.setFont(new Font(font_style, Font.BOLD, 40));
-        String str = "PAKISTAN";
-        g.setColor(shadow);
-        g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - gap - 50, 100 + gap);
-        g.setColor(font_color);
-        g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 100);
-
-        g.setFont(new Font(font_style, Font.BOLD, 25));
-
-        str = "From:";
-        if (fromVertex != null)
-            str += " " + fromVertex;
-        else str += " \t-";
-
-        g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 170);
-
-        str = "To:";
-        if (toVertex != null)
-            str += " " + toVertex;
-        else str += " \t-";
-
-        g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 200);
+        writeText(g);
 
     }
 
@@ -275,6 +239,42 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     }
 
     /**
+     * paints the general text on the panel | O(1)
+     * @param g is the graphics
+     */
+    private void writeText(Graphics g) {
+
+        Color shadow = Color.gray;
+
+        // for shadow effect
+        int gap = 2;
+
+        g.setFont(new Font(font_style, Font.BOLD, 40));
+        String str = "PAKISTAN";
+        g.setColor(shadow);
+        g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - gap - 50, 100 + gap);
+        g.setColor(font_color);
+        g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 100);
+
+        g.setFont(new Font(font_style, Font.BOLD, 25));
+
+        str = "From:";
+        if (fromVertex != null)
+            str += " " + fromVertex;
+        else str += " \t-";
+
+        g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 170);
+
+        str = "To:";
+        if (toVertex != null)
+            str += " " + toVertex;
+        else str += " \t-";
+
+        g.drawString(str, 3 * B_WIDTH/4 - g.getFontMetrics().stringWidth(str)/2 - 50, 200);
+
+    }
+
+    /**
      * draws all the cities | O(V)
      * @param g is the graphics
      */
@@ -311,6 +311,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
             if (i < animation_counter) {
                 drawLine(g, c1, c2, i);
                 writePathDetails(g, c1, c2, i);
+                current.data.getCity().getButton().setPressed(true);
             }
             current = current.next;
         }
@@ -329,7 +330,6 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
 
     /**
      * draws a line between two cities | O(1)
-     *
      * @param g  is the graphics
      * @param c1 is the first city
      * @param c2 is the second city
@@ -358,7 +358,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
             g2.setColor(Color.green);
         else g2.setColor(Color.red);
 
-        g2.setStroke(new BasicStroke(5));
+        g2.setStroke(new BasicStroke(8));
         g2.drawLine(fromX, fromY, endPoint.x, endPoint.y);
         g2.setStroke(new BasicStroke(1));
 
@@ -381,7 +381,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
 
         g2.setColor(font_color);
 
-        String str = c1.getName() + " -> " + c2.getName() + " | " + getDistance(c1, c2) + " km";
+        String str = c1.getName() + " ➔ " + c2.getName() + " | " + getDistance(c1, c2) + " km";
         g2.drawString(str, 3 * B_WIDTH / 4 - g2.getFontMetrics().stringWidth(str) / 2 - 50, 250 + 30 * i);
 
         g2.setStroke(new BasicStroke(1));
@@ -408,8 +408,12 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      */
     private void getPath() {
 
-        if (fromVertex == null || toVertex == null)
+        if (fromVertex == null || toVertex == null) {
+            if (fromVertex == null)
+                JOptionPane.showMessageDialog(null, "Please select a Source City!");
+            else JOptionPane.showMessageDialog(null, "Please select a Destination City!");
             return;
+        }
 
         for (Vertex vertex : pakistan.getVertices())
             vertex.resetVertex();
@@ -431,7 +435,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     }
 
     /**
-     * monitors the mouse presses (click + release) | O(E*logV)
+     * monitors the mouse presses (click + release) | O(V)
      * @param e the event to be processed
      */
     @Override
@@ -440,17 +444,13 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         int x = e.getX();
         int y = e.getY();
 
-        // resetting if none of the cities has been selected
-        if (fromVertex != null && toVertex != null){
-            path = null;
-            fromVertex.getCity().getButton().setPressed(false);
-            fromVertex = null;
-            toVertex.getCity().getButton().setPressed(false);
-            toVertex = null;
-        }
+        // resetting if both the cities have been previously selected
+        if (fromVertex != null && toVertex != null)
+            reset();
 
         // setting the source city as the one pressed (if any)
         if (fromVertex == null){
+
             for (Vertex v : pakistan.getVertices()) {
                 v.getCity().getButton().isClicked(x, y);
                 if (v.getCity().getButton().isPressed()) {
@@ -471,7 +471,19 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
             }
         }
 
-        getPath();
+    }
+
+    /**
+     * monitors the mouse movement (hover) | O(V)
+     * @param e the event to be processed
+     */
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
+        // displays the name of the city when hovered
+
+        for (Vertex v : pakistan.getVertices())
+            v.getCity().getButton().isHovered(e.getX(), e.getY());
 
     }
 
@@ -507,22 +519,32 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     @Override
     public void keyPressed(KeyEvent e) {
 
+        // get path on enter
+        if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_SPACE)
+            getPath();
+
+        // reset
+        if (e.getKeyCode() == KeyEvent.VK_R)
+            reset();
+
+        // toggle bg color
         if (e.getKeyCode() == KeyEvent.VK_D)
-            toggle_bg_color();
+            toggleBgColor();
 
+        // select bs color
         if (e.getKeyCode() == KeyEvent.VK_C)
-            select_bg_color();
+            selectBgColor();
 
+        // search/find city
         if (e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_F) {
 
-            path = null;
             Vertex vertex;
 
             if (e.getKeyCode() == KeyEvent.VK_S) {
                 String city_name = JOptionPane.showInputDialog("Please enter a city name: ");
                 if (city_name == null)
                     return;
-                vertex = searchCityByName(city_name);
+                vertex = searchCity(city_name);
 
             } else vertex = (Vertex) JOptionPane.showInputDialog(null, "Please select a city", "City Selection", JOptionPane.PLAIN_MESSAGE, null, pakistan.getVertices(), null);
 
@@ -542,35 +564,15 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
             if (toVertex == null) {
                 toVertex = vertex;
                 toVertex.getCity().getButton().setPressed(true);
-                getPath();
                 return;
             }
 
             // resetting previously selected vertices and path
-            path = null;
-            fromVertex.getCity().getButton().setPressed(false);
-            toVertex.getCity().getButton().setPressed(false);
-            toVertex = null;
+            reset();
 
             // setting source vertex
             fromVertex = vertex;
             fromVertex.getCity().getButton().setPressed(true);
-
-        }
-
-        if (e.getKeyCode() == KeyEvent.VK_R) {
-
-            path = null;
-
-            if (fromVertex != null) {
-                fromVertex.getCity().getButton().setPressed(false);
-                fromVertex = null;
-            }
-
-            if (toVertex != null) {
-                toVertex.getCity().getButton().setPressed(false);
-                toVertex = null;
-            }
 
         }
 
@@ -586,18 +588,8 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         // TODO Auto-generated method stub
     }
 
-	@Override
-	public void mouseMoved(MouseEvent e) {
-
-        // displays the name of the city when hovered
-
-        for (Vertex v : pakistan.getVertices())
-            v.getCity().getButton().isHovered(e.getX(), e.getY());
-
-	}
-
     /**
-     * finds the x value on the GUI corresponding to the longitude
+     * finds the x value on the GUI corresponding to the longitude | O(1)
      * @param lng is the longitude of the map-coordinates
      * @return the x-value
      */
@@ -606,7 +598,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     }
 
     /**
-     * finds the y value on the GUI corresponding to the latitude
+     * finds the y value on the GUI corresponding to the latitude | O(1)
      * @param lat is the latitude of the map-coordinates
      * @return the y-value
      */
@@ -615,7 +607,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     }
 
     /**
-     * calculates the distance between two cities assuming we reside on the equator
+     * calculates the distance between two cities assuming we reside on the equator | O(1)
      * <a href="https://www.thoughtco.com/degree-of-latitude-and-longitude-distance-4070616">...</a>
      * @param c1 is the city1
      * @param c2 is the city2
@@ -623,15 +615,15 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
      */
     public static float getDistance(City c1, City c2) {
 
-        double lng = (Math.abs(c1.getLng() - c2.getLng())*111.321);
-        double lat = (Math.abs(c1.getLat() - c2.getLat())*68.703);
+        float lng = (Math.abs(c1.getLng() - c2.getLng())*111.321f);
+        float lat = (Math.abs(c1.getLat() - c2.getLat())*68.703f);
 
         return (float) Math.sqrt((lng*lng + lat*lat));
 
     }
 
     /**
-     * linearly interpolate between two points at t percent
+     * linearly interpolate between two points at t percent | O(1)
      * @param p1 is the initial point
      * @param p2 is the final point
      * @param t is the percentage
@@ -647,16 +639,16 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     }
 
     /**
-     * returns a value at t percent between the init and final value (linear interpolation)
+     * returns a value at t percent between the init and final value (linear interpolation) | O(1)
      */
     private int lerp(int z1, int z2, float t){
         return z1 + (int)((z2 - z1) * t);
     }
 
     /**
-     * toggles the background color between the 3 presets: white, black, green
+     * toggles the background color between the 3 presets: white, black, green | O(1)
      */
-    private void toggle_bg_color() {
+    private void toggleBgColor() {
 
         bg_color_selected = ++bg_color_selected % bg_colors.length;
 
@@ -671,7 +663,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     /**
      * sets bg color of user's choice | O(1)
      */
-    private void select_bg_color() {
+    private void selectBgColor() {
 
         Color color = JColorChooser.showDialog(this, "Please select a color:", null);
 
@@ -690,7 +682,7 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
     /**
      * searches a city by its name through binary search | log(V)
      */
-    private Vertex searchCityByName(String city_name) {
+    private Vertex searchCity(String city_name) {
 
         Vertex vertex = null;
         Vertex[] vertices = pakistan.getVertices();
@@ -711,6 +703,33 @@ public class Map extends JPanel implements ActionListener, MouseInputListener, K
         }
 
         return vertex;
+    }
+
+    /**
+     * resets the vertices in the path | O(n)
+     */
+    private void reset() {
+
+        if (path != null) {
+            Node<Vertex> current = path.head;
+            for (int i = 0; i < path.size; i++) {
+                current.data.getCity().getButton().setPressed(false);
+                current = current.next;
+            }
+        }
+
+        if (fromVertex != null) {
+            fromVertex.getCity().getButton().setPressed(false);
+            fromVertex = null;
+        }
+
+        if (toVertex != null) {
+            toVertex.getCity().getButton().setPressed(false);
+            toVertex = null;
+        }
+
+        path = null;
+
     }
 
 }
